@@ -16,6 +16,7 @@
     </div>
 
     <div class="topbar__actions">
+      <button id="aboutBtn" class="btn btn--ghost" type="button">About</button>
       <button id="resetViewBtn" class="btn btn--ghost" type="button">Reset</button>
       <button id="downloadBtn" class="btn" type="button">Save Image</button>
     </div>
@@ -25,16 +26,11 @@
     <aside class="panel">
       <section class="panel__section">
         <h3>Scene</h3>
-        <select id="modeSelect" class="select"></select>
-      </section>
-
-      <section id="fenceSceneSection" class="panel__section">
-        <h3>Fence View</h3>
-        <div id="sceneButtons" class="segmented"></div>
+        <select id="sceneSelect" class="select"></select>
       </section>
 
       <section class="panel__section">
-        <h3 id="styleHeader">Fence Style</h3>
+        <h3 id="styleHeading">Fence Style</h3>
         <select id="styleSelect" class="select"></select>
       </section>
     </aside>
@@ -47,12 +43,26 @@
 
       <div class="stage">
         <canvas id="canvas" width="1960" height="1096"></canvas>
-        <iframe id="gateIframe" title="Grandview Gate Studio" src="gate_tool.html"></iframe>
       </div>
     </section>
   </main>
 
-  <script src="app.js"></script>
+  <div id="aboutModal" class="modal" aria-hidden="true">
+    <div class="modal__backdrop" data-close="1"></div>
+    <div class="modal__panel" role="dialog" aria-modal="true" aria-labelledby="aboutTitle">
+      <h2 id="aboutTitle" class="modal__title">About</h2>
+      <div class="modal__body">
+        <div><strong>Grandview Fence Design Studio</strong></div>
+        <div id="aboutVersion" style="margin-top:6px"></div>
+      </div>
+      <div class="modal__actions">
+        <button class="btn btn--ghost" type="button" data-close="1">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js?v=0.4.2"></script>
+
 </body>
 </html>
 

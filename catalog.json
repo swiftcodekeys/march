@@ -24,6 +24,48 @@
       "id": "back",
       "label": "Back Yard",
       "background": "assets/backgrounds/tool-background-back_1960x1096_1960x1096.png"
+    },
+    {
+      "id": "gate",
+      "label": "Gate",
+      "background": "assets/backgrounds/tool-background-gate_1960x1096.png"
+    }
+  ],
+  "gate_styles": [
+    {
+      "id": "gate_uaf_200",
+      "code": "gate-uaf-200",
+      "label": "Grandview Horizon\u2122 Gate"
+    },
+    {
+      "id": "gate_uaf_201",
+      "code": "gate-uaf-201",
+      "label": "Grandview Horizon Pro\u2122 Gate"
+    },
+    {
+      "id": "gate_uaf_250",
+      "code": "gate-uaf-250",
+      "label": "Grandview Vanguard\u2122 Gate"
+    },
+    {
+      "id": "gate_uab_200",
+      "code": "gate-uab-200",
+      "label": "Grandview Haven\u2122 Gate"
+    },
+    {
+      "id": "gate_uas_100",
+      "code": "gate-uas-100",
+      "label": "Grandview Charleston\u2122 Gate"
+    },
+    {
+      "id": "gate_uas_101",
+      "code": "gate-uas-101",
+      "label": "Grandview Charleston Pro\u2122 Gate"
+    },
+    {
+      "id": "gate_uas_150",
+      "code": "gate-uas-150",
+      "label": "Grandview Savannah\u2122 Gate"
     }
   ],
   "styles": [
@@ -95,6 +137,10 @@
       "uas-150": "assets/overlays/uas-150-back.png",
       "uas-300": "assets/overlays/uas-300-back.png",
       "uas-350": "assets/overlays/uas-350-back.png"
+    },
+    "gate": {
+      "gate-uaf-200": "assets/overlays/gate-uaf-200.png",
+      "gate-uaf-250": "assets/overlays/gate-uaf-250.png"
     }
   }
 }
