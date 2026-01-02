@@ -1,7 +1,7 @@
 // Grandview Fence Design Studio (static, no build step)
 // Renders: background + optional overlay. No pan/zoom/drag.
 
-const APP_VERSION = "v0.6.1";
+const APP_VERSION = "v0.6.2";
 const CANVAS_W = 1960;
 const CANVAS_H = 1096;
 

@@ -4,7 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Grandview Gate Tool</title>
-  <link rel="stylesheet" href="gate_tool/css/ultra_ds_g.css" />
+  <base href="gate_tool/">
+  <link rel="stylesheet" href="css/ultra_ds_g.css" />
   <style>
     /* Embed mode: hide Ultra UI; parent app provides controls */
     html, body { margin:0; padding:0; width:100%; height:100%; overflow:hidden; background:#0b1220; }
@@ -33,16 +34,16 @@
     <div id="progress"></div>
     <div id="lg"></div>
   </div>
-  <script src="gate_tool/js/jqmin.js"></script>
-  <script src="gate_tool/js/jqm_min.js"></script>
-  <script src="gate_tool/js/iscroll-lite.js"></script>
-  <script src="gate_tool/js/three.min_086.js"></script>
-  <script src="gate_tool/js/Detector.js"></script>
-  <script src="gate_tool/js/CopyShader.js"></script>
-  <script src="gate_tool/js/RGBELoader.js"></script>
-  <script src="gate_tool/js/HDRCubeTextureLoader.js"></script>
-  <script src="gate_tool/js/PMREMGenerator.js"></script>
-  <script src="gate_tool/js/PMREMCubeUVPacker.js"></script>
+  <script src="js/jqmin.js"></script>
+  <script src="js/jqm_min.js"></script>
+  <script src="js/iscroll-lite.js"></script>
+  <script src="js/three.min_086.js"></script>
+  <script src="js/Detector.js"></script>
+  <script src="js/CopyShader.js"></script>
+  <script src="js/RGBELoader.js"></script>
+  <script src="js/HDRCubeTextureLoader.js"></script>
+  <script src="js/PMREMGenerator.js"></script>
+  <script src="js/PMREMCubeUVPacker.js"></script>
   <script>
     // MVP stability patch: disable HDR environment loading.
     // Ultra's gate renderer uses RGBELoader/HDRCubeTextureLoader + PMREM for PBR lighting.
@@ -103,8 +104,8 @@
       }
     })();
   </script>
-  <script src="gate_tool/js/CSSPlugin.min.js"></script>
-  <script src="gate_tool/js/ultra_dsg_min.js"></script>
+  <script src="js/CSSPlugin.min.js"></script>
+  <script src="js/ultra_dsg_min.js"></script>
   <script>
     // Parent bridge: drive Ultra gate renderer without showing its UI.
     (function(){
@@ -140,6 +141,7 @@
         try {
           return attemptFn();
         } catch (e) {
+          console.error("Gate render error:", e);
           // Common failure while assets are still loading: v0() inside viz() toggles
           // .visible on groups that aren't ready yet.
           if (tries < 30) {
