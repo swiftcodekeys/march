@@ -34,85 +34,85 @@
   "gate_styles": [
     {
       "id": "gate_uaf_200",
-      "code": "gate-uaf-200",
-      "label": "Grandview Horizon\u2122 Gate"
+      "code": "UAF-200",
+      "label": "Grandview Horizon™ Gate"
     },
     {
       "id": "gate_uaf_201",
-      "code": "gate-uaf-201",
-      "label": "Grandview Horizon Pro\u2122 Gate"
+      "code": "UAF-201",
+      "label": "Grandview Horizon Pro™ Gate"
     },
     {
       "id": "gate_uaf_250",
-      "code": "gate-uaf-250",
-      "label": "Grandview Vanguard\u2122 Gate"
+      "code": "UAF-250",
+      "label": "Grandview Vanguard™ Gate"
     },
     {
       "id": "gate_uab_200",
-      "code": "gate-uab-200",
-      "label": "Grandview Haven\u2122 Gate"
+      "code": "UAB-200",
+      "label": "Grandview Haven™ Gate"
     },
     {
       "id": "gate_uas_100",
-      "code": "gate-uas-100",
-      "label": "Grandview Charleston\u2122 Gate"
+      "code": "UAS-100",
+      "label": "Grandview Charleston™ Gate"
     },
     {
       "id": "gate_uas_101",
-      "code": "gate-uas-101",
-      "label": "Grandview Charleston Pro\u2122 Gate"
+      "code": "UAS-101",
+      "label": "Grandview Charleston Pro™ Gate"
     },
     {
       "id": "gate_uas_150",
-      "code": "gate-uas-150",
-      "label": "Grandview Savannah\u2122 Gate"
+      "code": "UAS-150",
+      "label": "Grandview Savannah™ Gate"
     }
   ],
   "styles": [
     {
       "id": "uab_200",
       "code": "uab-200",
-      "label": "Haven\u2122"
+      "label": "Haven™"
     },
     {
       "id": "uaf_200",
       "code": "uaf-200",
-      "label": "Horizon\u2122"
+      "label": "Horizon™"
     },
     {
       "id": "uaf_201",
       "code": "uaf-201",
-      "label": "Horizon Pro\u2122"
+      "label": "Horizon Pro™"
     },
     {
       "id": "uaf_250",
       "code": "uaf-250",
-      "label": "Vanguard\u2122"
+      "label": "Vanguard™"
     },
     {
       "id": "uas_100",
       "code": "uas-100",
-      "label": "Charleston\u2122"
+      "label": "Charleston™"
     },
     {
       "id": "uas_101",
       "code": "uas-101",
-      "label": "Charleston Pro\u2122"
+      "label": "Charleston Pro™"
     },
     {
       "id": "uas_150",
       "code": "uas-150",
-      "label": "Savannah\u2122"
+      "label": "Savannah™"
     },
     {
       "id": "uas_300",
       "code": "uas-300",
-      "label": "Eclipse\u2122"
+      "label": "Eclipse™"
     },
     {
       "id": "uas_350",
       "code": "uas-350",
-      "label": "Lexington\u2122"
+      "label": "Lexington™"
     }
   ],
   "overlays": {

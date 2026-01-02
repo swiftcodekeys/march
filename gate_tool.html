@@ -4,30 +4,164 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Grandview Gate Tool</title>
-  <link rel="stylesheet" href="gate_tool/css/ultra_ds_g.css" />
+  <link rel="stylesheet" href="css/ultra_ds_g.css" />
+  <style>
+    /* Embed mode: hide Ultra UI; parent app provides controls */
+    html, body { margin:0; padding:0; width:100%; height:100%; overflow:hidden; background:#0b1220; }
+    #mndv, #nv, #lg, #progress { display:none !important; }
+    #main { width:100%; height:100%; }
+    /* Embed mode: keep the renderer visible so the background shows. */
+    #usi { display:block; }
+  </style>
 </head>
 <body>
   <div id="main">
     <div id="gb">Loading…</div>
+    <!-- Ultra gate script appends internal canvases to #tx and then accesses them via window['cv_*'].
+         Keep a hidden #tx container so those append operations succeed in embed mode. -->
+    <div id="tx" style="display:none"></div>
     <div id="bg"><canvas id="bgCV" class="cv" width="980" height="548"></canvas></div>
-    <div id="three"><canvas id="cv0" class="cv" width="1960" height="1096"></canvas></div>
+    <!-- Ultra gate renderer expects a visible canvas with id=usicv (WebGL) -->
+    <div id="usi"><canvas id="usicv" class="cv" width="980" height="548"></canvas></div>
+    <!-- Keep cv0 for internal/offscreen usage if the script references it -->
+    <canvas id="cv0" class="cv" width="1960" height="1096" style="display:none"></canvas>
+    <!-- Ultra script also references an offscreen canvas id=cv_ns -->
+    <canvas id="cv_ns" class="cv" width="980" height="548" style="display:none"></canvas>
     <div id="fg"><canvas id="fgCV" class="cv" width="980" height="548"></canvas></div>
     <div id="mndv"></div>
     <div id="nv"></div>
     <div id="progress"></div>
     <div id="lg"></div>
   </div>
-  <script src="gate_tool/js/jqmin.js"></script>
-  <script src="gate_tool/js/jqm_min.js"></script>
-  <script src="gate_tool/js/iscroll-lite.js"></script>
-  <script src="gate_tool/js/three.min_086.js"></script>
-  <script src="gate_tool/js/Detector.js"></script>
-  <script src="gate_tool/js/CopyShader.js"></script>
-  <script src="gate_tool/js/RGBELoader.js"></script>
-  <script src="gate_tool/js/HDRCubeTextureLoader.js"></script>
-  <script src="gate_tool/js/PMREMGenerator.js"></script>
-  <script src="gate_tool/js/PMREMCubeUVPacker.js"></script>
-  <script src="gate_tool/js/CSSPlugin.min.js"></script>
-  <script src="gate_tool/js/ultra_dsg_min.js"></script>
+  <script src="js/jqmin.js"></script>
+  <script src="js/jqm_min.js"></script>
+  <script src="js/iscroll-lite.js"></script>
+  <script src="js/three.min_086.js"></script>
+  <script src="js/Detector.js"></script>
+  <script src="js/CopyShader.js"></script>
+  <script src="js/RGBELoader.js"></script>
+  <script src="js/HDRCubeTextureLoader.js"></script>
+  <script src="js/PMREMGenerator.js"></script>
+  <script src="js/PMREMCubeUVPacker.js"></script>
+  <script>
+    // MVP stability patch: disable HDR environment loading.
+    // Ultra's gate renderer uses RGBELoader/HDRCubeTextureLoader + PMREM for PBR lighting.
+    // In our embed build we don't ship Ultra's HDR assets. Rather than fail boot,
+    // we return a neutral 1x1 texture/cubemap so the renderer can proceed.
+    (function(){
+      if (!window.THREE) return;
+
+      // Patch RGBELoader (equirectangular HDR)
+      if (THREE.RGBELoader && THREE.RGBELoader.prototype) {
+        THREE.RGBELoader.prototype.load = function(url, onLoad, onProgress, onError){
+          try {
+            var data = new Uint8Array([128, 128, 128, 255]);
+            var tex = new THREE.DataTexture(data, 1, 1, THREE.RGBAFormat);
+            tex.needsUpdate = true;
+            tex.flipY = true;
+            tex.magFilter = THREE.LinearFilter;
+            tex.minFilter = THREE.LinearFilter;
+            tex.generateMipmaps = false;
+            if (THREE.EquirectangularReflectionMapping) {
+              tex.mapping = THREE.EquirectangularReflectionMapping;
+            }
+            if (typeof onLoad === 'function') {
+              setTimeout(function(){ onLoad(tex); }, 0);
+            }
+            return tex;
+          } catch (e) {
+            if (typeof onError === 'function') onError(e);
+          }
+        };
+      }
+
+      // Patch HDRCubeTextureLoader (cube HDR)
+      if (THREE.HDRCubeTextureLoader && THREE.HDRCubeTextureLoader.prototype) {
+        THREE.HDRCubeTextureLoader.prototype.load = function(urls, onLoad, onProgress, onError){
+          try {
+            var cube = new THREE.CubeTexture([]);
+            cube.needsUpdate = true;
+            if (typeof onLoad === 'function') {
+              setTimeout(function(){ onLoad(cube); }, 0);
+            }
+            return cube;
+          } catch (e) {
+            if (typeof onError === 'function') onError(e);
+          }
+        };
+      }
+    })();
+  </script>
+  <script src="js/CSSPlugin.min.js"></script>
+  <script src="js/ultra_dsg_min.js"></script>
+  <script>
+    // Parent bridge: drive Ultra gate renderer without showing its UI.
+    (function(){
+      function ready(){
+        return (typeof window.stlArr !== 'undefined' && typeof window.gOpt === 'function' && typeof window.stl === 'function');
+      }
+
+      function findStyleIndexByCode(code){
+        if (!window.stlArr) return null;
+        for (var i=0;i<window.stlArr.length;i++){
+          if (window.stlArr[i] && window.stlArr[i].code === code) return i;
+        }
+        return null;
+      }
+
+      function applyStyleByCode(code){
+        var usi = document.getElementById('usi');
+        if (usi) usi.style.display = 'block';
+        var idx = findStyleIndexByCode(code);
+        if (idx === null) return false;
+        window.gN = idx;
+        // Reset dependent options + rerender (matches Ultra UI click behavior)
+        window.gOpt(true);
+        window.stl(window.viz(window.rndr));
+        if (typeof window.kMnu === 'function') window.kMnu();
+        return true;
+      }
+
+      function resetGate(){
+        // Reset to default style (keeps renderer visible so the background shows)
+        try{
+          var usi = document.getElementById('usi');
+          if (usi) usi.style.display = 'block';
+          if (typeof window.gOpt === 'function' && typeof window.stl === 'function'){
+            window.gN = 1; // UAF-200
+            window.gOpt(true);
+            window.stl(window.viz(window.rndr));
+            if (typeof window.kMnu === 'function') window.kMnu();
+          }
+        }catch(e){}
+      }
+
+      window.addEventListener('message', function(ev){
+        var d = ev.data || {};
+        if (!d || !d.type) return;
+
+        // Wait until Ultra script has initialized.
+        if (!ready()){
+          var tries = 0;
+          var t = setInterval(function(){
+            tries++;
+            if (ready()){
+              clearInterval(t);
+              window.dispatchEvent(new MessageEvent('message', { data: d }));
+            }
+            if (tries > 100) clearInterval(t);
+          }, 100);
+          return;
+        }
+
+        if (d.type === 'SET_GATE_STYLE'){
+          applyStyleByCode(d.code);
+        }
+        if (d.type === 'RESET_GATE'){
+          resetGate();
+        }
+      });
+    })();
+  </script>
 </body>
 </html>

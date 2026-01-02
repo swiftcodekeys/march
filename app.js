@@ -1,12 +1,13 @@
 // Grandview Fence Design Studio (static, no build step)
 // Renders: background + optional overlay. No pan/zoom/drag.
 
-const APP_VERSION = "v0.4.2";
+const APP_VERSION = "v0.5.8";
 const CANVAS_W = 1960;
 const CANVAS_H = 1096;
 
 const els = {
   canvas: document.getElementById('canvas'),
+  gateFrame: document.getElementById('gateFrame'),
   sceneSelect: document.getElementById('sceneSelect'),
   styleHeading: document.getElementById('styleHeading'),
   styleSelect: document.getElementById('styleSelect'),
@@ -119,6 +120,22 @@ function draw(){
   }
 }
 
+function setStageForScene(){
+  if (!els.gateFrame) return;
+  if (state.scene === 'gate'){
+    els.canvas.style.display = 'none';
+    els.gateFrame.style.display = 'block';
+    // Gate tool has its own renderer; disable Save Image for now.
+    els.downloadBtn.disabled = true;
+    els.downloadBtn.textContent = 'Save Image';
+  } else {
+    els.canvas.style.display = 'block';
+    els.gateFrame.style.display = 'none';
+    els.downloadBtn.disabled = false;
+    els.downloadBtn.textContent = 'Save Image';
+  }
+}
+
 function syncUi(){
   if (els.sceneSelect) els.sceneSelect.value = state.scene;
   if (els.styleHeading) els.styleHeading.textContent = state.scene === 'gate' ? 'Gate Style' : 'Fence Style';
@@ -164,9 +181,48 @@ function buildStyleSelect(){
   };
 }
 
+function postToGate(msg){
+  try{
+    if (els.gateFrame && els.gateFrame.contentWindow){
+      els.gateFrame.contentWindow.postMessage(msg, '*');
+    }
+  }catch{}
+}
+
+// The gate renderer lives inside an iframe. If we post before it finishes loading,
+// the message can be dropped. Track readiness and re-sync on load.
+let gateFrameReady = false;
+if (els.gateFrame){
+  els.gateFrame.addEventListener('load', () => {
+    gateFrameReady = true;
+    if (state.scene === 'gate'){
+      if (state.styleCode){
+        postToGate({ type:'SET_GATE_STYLE', code: state.styleCode });
+      } else {
+        postToGate({ type:'RESET_GATE' });
+      }
+    }
+  });
+}
+
 async function refreshImages(){
   syncUi();
   setStatus('Loading…');
+
+  // Gate scene uses Three.js renderer inside gate_tool.html
+  if (state.scene === 'gate'){
+    setStageForScene();
+    // If no style selected, just reset to default view (background + default gate)
+    if (state.styleCode){
+      postToGate({ type:'SET_GATE_STYLE', code: state.styleCode });
+      setStatus('');
+    } else {
+      postToGate({ type:'RESET_GATE' });
+      setStatus('');
+    }
+    syncUi();
+    return;
+  }
 
   try{
     const bgFile = getBackgroundFile(state.scene);
@@ -214,6 +270,9 @@ async function setScene(sceneId){
   // Rebuild dropdown immediately so it never shows the wrong list.
   buildStyleSelect();
 
+  // Toggle stage elements immediately (prevents flicker)
+  setStageForScene();
+
   await refreshImages();
   updateUrl();
 }
@@ -226,9 +285,15 @@ async function setStyle(styleCode){
 }
 
 function resetCurrentScene(){
-  // Reset should remove overlay for the current scene and leave scene unchanged.
-  state.styleCode = null;
-  lastStyleByScene[state.scene] = null;
+  // Reset should return the current scene to its default selection.
+  // For fence scenes: background-only (no overlay) matches the existing UX.
+  // For gate scene (runtime renderer): select the default gate style so the renderer shows a valid view.
+  if (state.scene === 'gate'){
+    state.styleCode = stylesForScene('gate')[0]?.code || null;
+  } else {
+    state.styleCode = null;
+  }
+  lastStyleByScene[state.scene] = state.styleCode;
   buildStyleSelect();
   refreshImages();
 }
@@ -276,10 +341,18 @@ function openAbout(){
   if (els.aboutVersion) els.aboutVersion.textContent = `Version: ${APP_VERSION}`;
   els.aboutModal.classList.add('is-open');
   els.aboutModal.setAttribute('aria-hidden','false');
+  // Move focus into the modal for accessibility.
+  const closeBtn = els.aboutModal.querySelector('[data-close="1"]');
+  if (closeBtn) closeBtn.focus();
 }
 
 function closeAbout(){
   if (!els.aboutModal) return;
+  // Ensure focus is not trapped inside a soon-to-be aria-hidden modal.
+  try {
+    if (els.aboutBtn) els.aboutBtn.focus();
+    if (document.activeElement) document.activeElement.blur();
+  } catch {}
   els.aboutModal.classList.remove('is-open');
   els.aboutModal.setAttribute('aria-hidden','true');
 }
@@ -309,10 +382,13 @@ async function init(){
   buildStyleSelect();
   hookControls();
 
-  // If we have a style in the URL, keep it. Otherwise default to the first fence style
-  // when landing on a fence scene.
-  if (!state.styleCode && state.scene !== 'gate') {
-    state.styleCode = stylesForScene(state.scene)[0]?.code || null;
+  // If we have a style in the URL, keep it. Otherwise pick sensible defaults.
+  if (!state.styleCode){
+    if (state.scene === 'gate'){
+      state.styleCode = stylesForScene('gate')[0]?.code || null;
+    } else {
+      state.styleCode = stylesForScene(state.scene)[0]?.code || null;
+    }
     lastStyleByScene[state.scene] = state.styleCode;
   }
 
