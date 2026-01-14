@@ -113,6 +113,36 @@
       var cmdQueue = [];
       var readyPoll = null;
 
+      var readyStart = Date.now();
+      var readyTimeoutMs = 15000; // fail fast if assets never load
+      var probeDone = false;
+
+      function showFatal(msg){
+        console.error(msg);
+        try {
+          var el = document.getElementById('loadError');
+          if (!el){
+            el = document.createElement('div');
+            el.id = 'loadError';
+            el.style.position = 'fixed';
+            el.style.left = '12px';
+            el.style.right = '12px';
+            el.style.top = '12px';
+            el.style.zIndex = '99999';
+            el.style.padding = '12px 14px';
+            el.style.borderRadius = '10px';
+            el.style.background = 'rgba(25,25,25,0.92)';
+            el.style.color = '#fff';
+            el.style.fontFamily = 'system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif';
+            el.style.fontSize = '14px';
+            el.style.lineHeight = '1.35';
+            el.style.boxShadow = '0 6px 24px rgba(0,0,0,0.35)';
+            document.body.appendChild(el);
+          }
+          el.textContent = msg;
+        } catch(e) {}
+      }
+
 function isReady(){
         return (
           typeof window.stlArr !== 'undefined' &&
@@ -120,8 +150,17 @@ function isReady(){
           typeof window.stl === 'function' &&
           typeof window.viz === 'function' &&
           typeof window.rndr === 'function' &&
-          // Add this check to ensure the 3D assets are loaded:
-          typeof window.pob12 !== 'undefined'
+
+          // Core meshes/groups used by viz() must exist before we try to run it.
+          typeof window.pob12 !== 'undefined' &&
+          typeof window.pob14 !== 'undefined' &&
+          typeof window.pob23 !== 'undefined' &&
+          typeof window.pc4  !== 'undefined' &&
+          typeof window.pc5  !== 'undefined' &&
+          typeof window.hng0 !== 'undefined' &&
+          typeof window.hng2 !== 'undefined' &&
+          typeof window.r2   !== 'undefined' &&
+          typeof window.r3   !== 'undefined'
         );
       }
 
@@ -194,10 +233,53 @@ function isReady(){
 
       // Start polling immediately; once Ultra finishes init we can apply queued commands.
       readyPoll = setInterval(function(){
-        if (isReady()) flushQueue();
-      }, 100);
+        if (isReady()) {
+          // One-time bootstrap to kick the first full render after *all* required meshes exist.
+          if (!window.__gvBootstrapped) {
+            window.__gvBootstrapped = true;
+            try {
+              // Build options, then render.
+              window.gOpt(true);
+              window.stl(function(){ window.viz(window.rndr); });
+            } catch (e) {
+              console.error("Bootstrap failed:", e);
+            }
+          }
+          flushQueue();
+          return;
+        }
 
-      window.addEventListener('message', function(ev){
+        // After a short delay, probe for a known model file to surface missing-asset issues (404s).
+        if (!probeDone && (Date.now() - readyStart) > 1500) {
+          probeDone = true;
+          var probes = [
+            './m/0/po12.json',
+            './m/0/pc4.json',
+            './m/3/hng.json',
+            'm/0/po12.json',
+            'gate_tool/m/0/po12.json'
+          ];
+          (function tryProbe(i){
+            if (i >= probes.length) return;
+            fetch(probes[i], { cache: 'no-store' })
+              .then(function(r){
+                if (!r.ok) return tryProbe(i+1);
+                // Found at least one model file; good sign.
+                console.log('Model probe ok:', probes[i]);
+              })
+              .catch(function(){
+                return tryProbe(i+1);
+              });
+          })(0);
+        }
+
+        // Hard timeout so we don't wait forever on staging/prod when assets are missing.
+        if ((Date.now() - readyStart) > readyTimeoutMs) {
+          if (readyPoll) { clearInterval(readyPoll); readyPoll = null; }
+          showFatal('3D gate assets failed to load (timeout). Missing gate_tool/m/*.json models or incorrect deploy path. Open DevTools → Network and look for 404s on /m/ or /gate_tool/m/.');
+        }
+      }, 100);
+window.addEventListener('message', function(ev){
         var d = ev.data || {};
         if (!d || !d.type) return;
         if (!isReady()) {
