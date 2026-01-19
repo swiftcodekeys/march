@@ -193,6 +193,7 @@ function postToGate(msg){
 // the message can be dropped. Track readiness and re-sync on load.
 let gateFrameReady = false;
 if (els.gateFrame){
+  // Load iframe only when needed to avoid WebGL context issues
   els.gateFrame.addEventListener('load', () => {
     gateFrameReady = true;
     if (state.scene === 'gate'){
@@ -272,6 +273,11 @@ async function setScene(sceneId){
 
   // Toggle stage elements immediately (prevents flicker)
   setStageForScene();
+
+  // Lazy load gate iframe only when gate scene is selected
+  if (sceneId === 'gate' && els.gateFrame && els.gateFrame.src === 'about:blank') {
+    els.gateFrame.src = 'gate_tool/index.html';
+  }
 
   await refreshImages();
   updateUrl();
