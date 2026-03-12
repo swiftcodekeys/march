@@ -1,10 +1,24 @@
-# Project Summary
+# Grandview Design Studio
 
-## Overview
+This is a web-based design studio for Grandview Fence products. It allows users to visualize different fence and gate styles in various scenes.
 
-This project is a web-based design studio for Grandview Fence products. It allows users to visualize different fence and gate styles in various scenes.
+## Running the Application
 
-## Architecture
+To run the application, you'll need Node.js and npm installed.
+
+1.  **Install Dependencies:**
+    ```bash
+    npm install
+    ```
+
+2.  **Start the Development Server:**
+    ```bash
+    npm start
+    ```
+
+This will start a local development server. The application will then be available at the URL provided in the terminal (usually `http://127.0.0.1:8080`).
+
+## How It Works
 
 The application is a single-page application (SPA) built with vanilla JavaScript, HTML, and CSS. It uses the `three.js` library for 2D and 3D rendering.
 
@@ -15,22 +29,16 @@ The application is divided into two main components:
 
 The main application and the gate tool communicate using the `postMessage` API.
 
-## Data
-
-The application's data, including the available scenes, styles, and asset paths, is defined in the `catalog.json` file.
-
-## Key Files
+## Project Structure
 
 *   `index.html`: The main HTML file for the application.
 *   `app.js`: The main JavaScript file for the application.
 *   `styles.css`: The main stylesheet for the application.
-*   `catalog.json`: The data file for the application.
-*   `gate_tool/index.html`: The HTML file for the gate tool `iframe`.
-*   `gate_tool/js/ultra_dsg_min.js`: The obfuscated JavaScript file for the gate tool.
-
-## Running the Application
-
-To run the application, you need to serve the project root directory from a local web server. A PowerShell script (`serve.ps1`) and a shell script (`scripts/start-server.sh`) are provided for this purpose.
+*   `catalog.json`: A data file that defines the available scenes, styles, and assets.
+*   `gate_tool/`: A directory containing the 3D gate renderer.
+*   `assets/`: A directory containing images and other assets.
+*   `documentation/`: A directory containing project documentation.
+*   `scripts/`: A directory containing utility scripts.
 
 ## Known Issues
 

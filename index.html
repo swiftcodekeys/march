@@ -3,73 +3,17 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Grandview Fence Design Studio</title>
-  <link rel="stylesheet" href="styles.css?v=2" />
+  <title>Grandview Fence & Gate Design Studio</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/86/three.min.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { overflow: hidden; background: #1a1a2e; }
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: #16213e; }
+    ::-webkit-scrollbar-thumb { background: #0f3460; border-radius: 3px; }
+  </style>
 </head>
 <body>
-  <header class="topbar">
-    <div class="brand">
-      <img class="brand__logo" src="assets/logo.png" alt="Grandview Fence" />
-      <div class="brand__text">
-        <div class="brand__sub">Design Studio</div>
-      </div>
-    </div>
-
-    <div class="topbar__actions">
-      <button id="aboutBtn" class="btn btn--ghost" type="button">About</button>
-      <button id="resetViewBtn" class="btn btn--ghost" type="button">Reset</button>
-      <button id="downloadBtn" class="btn" type="button">Save Image</button>
-    </div>
-  </header>
-
-  <main class="layout">
-    <aside class="panel">
-      <section class="panel__section">
-        <h3>Scene</h3>
-        <select id="sceneSelect" class="select"></select>
-      </section>
-
-      <section class="panel__section">
-        <h3 id="styleHeading">Fence Style</h3>
-        <select id="styleSelect" class="select"></select>
-      </section>
-    </aside>
-
-    <section class="stageWrap">
-      <div class="stageHeader">
-        <div class="stageHeader__left">Preview</div>
-        <div class="stageHeader__right"><span id="status"></span></div>
-      </div>
-
-      <div class="stage">
-        <canvas id="canvas" width="1960" height="1096"></canvas>
-        <iframe
-          id="gateFrame"
-          class="gateFrame"
-          src="about:blank"
-          title="Gate Preview"
-          loading="eager"
-        ></iframe>
-      </div>
-    </section>
-  </main>
-
-  <div id="aboutModal" class="modal" aria-hidden="true">
-    <div class="modal__backdrop" data-close="1"></div>
-    <div class="modal__panel" role="dialog" aria-modal="true" aria-labelledby="aboutTitle">
-      <h2 id="aboutTitle" class="modal__title">About</h2>
-      <div class="modal__body">
-        <div><strong>Grandview Fence Design Studio</strong></div>
-        <div id="aboutVersion" style="margin-top:6px"></div>
-      </div>
-      <div class="modal__actions">
-        <button class="btn btn--ghost" type="button" data-close="1">Close</button>
-      </div>
-    </div>
-  </div>
-
-  <script src="app.js?v=0.6.33"></script>
-
+  <div id="root"></div>
 </body>
 </html>
-
