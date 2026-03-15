@@ -286,18 +286,19 @@ GateRenderer.prototype.buildGate = function(config) {
         gate.add(mesh);
     });
 
-    // PICKETS — residential spacing always loaded (Ultra default)
-    // pbRes uses separate clip plane for puppy support
-    loader.load(getModelPath('ptRes', config), function(geo) {
-        var mesh = new THREE.Mesh(geo, makeClipMat(clips.pt));
-        snap(mesh, M_PICKET_TOP);
-        gate.add(mesh);
-    });
-    loader.load(getModelPath('pbRes', config), function(geo) {
-        var mesh = new THREE.Mesh(geo, makeClipMat(clips.pbRes));
-        snap(mesh, M_IDENTITY);
-        gate.add(mesh);
-    });
+    // PICKETS — residential spacing (pbRes uses separate clip for puppy support)
+    if (config.accessories && config.accessories.res) {
+        loader.load(getModelPath('ptRes', config), function(geo) {
+            var mesh = new THREE.Mesh(geo, makeClipMat(clips.pt));
+            snap(mesh, M_PICKET_TOP);
+            gate.add(mesh);
+        });
+        loader.load(getModelPath('pbRes', config), function(geo) {
+            var mesh = new THREE.Mesh(geo, makeClipMat(clips.pbRes));
+            snap(mesh, M_IDENTITY);
+            gate.add(mesh);
+        });
+    }
 
     // UPPER FILLER RAIL
     if (config.accessories && config.accessories.ufr) {
