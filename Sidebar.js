@@ -1,11 +1,37 @@
 import React from 'react';
 import {
     FENCE_STYLES, COLORS, HEIGHTS, POST_CAPS, FINIALS,
-    POSTS, ARCH_STYLES, ACCESSORIES, OPTION_LABELS
+    ARCH_STYLES, ACCESSORIES, OPTION_LABELS, STYLE_FEATURE_GATE,
+    getStyleRenderMode
 } from './configData';
+
+const ColorSwatch = ({ color, isActive, onClick }) => {
+    const [hovered, setHovered] = React.useState(false);
+    return (
+        <div style={{ position: 'relative' }}>
+            {hovered && (
+                <div style={styles.colorTooltip}>{color.name}</div>
+            )}
+            <button
+                onClick={onClick}
+                onMouseEnter={() => setHovered(true)}
+                onMouseLeave={() => setHovered(false)}
+                style={{
+                    ...styles.colorSwatch,
+                    backgroundColor: color.hex,
+                    ...(isActive ? styles.colorSwatchActive : {}),
+                    ...(hovered ? styles.colorSwatchHover : {}),
+                }}
+            />
+        </div>
+    );
+};
 
 const Sidebar = ({ config, onConfigChange }) => {
     const selectedStyle = FENCE_STYLES.find(s => s.id === config.styleId) || FENCE_STYLES[0];
+    const gate = STYLE_FEATURE_GATE[config.styleId] || {};
+    const renderMode = getStyleRenderMode(config.styleId);
+    const is3D = renderMode === '3d';
 
     const update = (key, value) => {
         onConfigChange({ ...config, [key]: value });
@@ -34,8 +60,11 @@ const Sidebar = ({ config, onConfigChange }) => {
     return (
         <div style={styles.sidebar}>
             <div style={styles.logo}>
-                <h1 style={styles.title}>Grandview</h1>
-                <p style={styles.subtitle}>Design Studio</p>
+                <img
+                    src="assets/logo.png"
+                    alt="Grandview Design Studio"
+                    style={styles.logoImg}
+                />
             </div>
 
             {/* GATE STYLE — Dropdown */}
@@ -47,12 +76,27 @@ const Sidebar = ({ config, onConfigChange }) => {
                 >
                     {FENCE_STYLES.map(style => (
                         <option key={style.id} value={style.id}>
-                            {style.name} — {style.subtitle} ({style.code})
+                            {style.name} — {style.subtitle}
                         </option>
                     ))}
                 </select>
             </Section>
 
+            {/* RENDER MODE BANNER */}
+            {!is3D && (
+                <div style={styles.modeBanner}>
+                    <span style={styles.modeBannerIcon}>
+                        {renderMode === 'overlay' ? '\u25A3' : '\u25A8'}
+                    </span>
+                    <span>
+                        {renderMode === 'overlay'
+                            ? 'Overlay mode \u2014 3D controls disabled'
+                            : 'Preview mode \u2014 3D controls disabled'}
+                    </span>
+                </div>
+            )}
+
+            {is3D && (<>
             {/* HEIGHT */}
             <Section title="Height">
                 <div style={styles.chipRow}>
@@ -75,15 +119,11 @@ const Sidebar = ({ config, onConfigChange }) => {
             <Section title="Color">
                 <div style={styles.colorRow}>
                     {COLORS.map(c => (
-                        <button
+                        <ColorSwatch
                             key={c.id}
+                            color={c}
+                            isActive={config.color && config.color.id === c.id}
                             onClick={() => update('color', c)}
-                            title={c.name}
-                            style={{
-                                ...styles.colorSwatch,
-                                backgroundColor: c.hex,
-                                ...(config.color && config.color.id === c.id ? styles.colorSwatchActive : {})
-                            }}
                         />
                     ))}
                 </div>
@@ -92,18 +132,9 @@ const Sidebar = ({ config, onConfigChange }) => {
                 </p>
             </Section>
 
-            {/* POST TYPE — Dropdown */}
-            <Section title="Post">
-                <select
-                    value={config.post || 'po14'}
-                    onChange={(e) => update('post', e.target.value)}
-                    style={styles.select}
-                >
-                    {POSTS.map(p => (
-                        <option key={p.id} value={p.id}>{p.name}</option>
-                    ))}
-                </select>
-            </Section>
+            {/* POST TYPE — Removed: dropdown was non-functional.
+                GateRenderer.js loads po40d/po14/po23 unconditionally
+                regardless of config.post value. See split-03 spec. */}
 
             {/* POST CAP */}
             <Section title="Post Cap">
@@ -117,7 +148,7 @@ const Sidebar = ({ config, onConfigChange }) => {
                     >
                         None
                     </button>
-                    {POST_CAPS.filter(pc => selectedStyle.options.includes(pc.id)).map(pc => (
+                    {POST_CAPS.filter(pc => selectedStyle.options.includes(pc.id) && (!gate.postCaps || gate.postCaps.includes(pc.id))).map(pc => (
                         <button
                             key={pc.id}
                             onClick={() => update('postCap', pc.id)}
@@ -139,9 +170,11 @@ const Sidebar = ({ config, onConfigChange }) => {
                     onChange={(e) => update('arch', e.target.value)}
                     style={styles.select}
                 >
-                    {ARCH_STYLES.map(a => (
-                        <option key={a.id} value={a.id}>{a.name}</option>
-                    ))}
+                    {ARCH_STYLES
+                        .filter(a => !gate.archStyles || gate.archStyles.includes(a.id))
+                        .map(a => (
+                            <option key={a.id} value={a.id}>{a.name}</option>
+                        ))}
                 </select>
             </Section>
 
@@ -154,7 +187,7 @@ const Sidebar = ({ config, onConfigChange }) => {
                         style={styles.select}
                     >
                         <option value="">None</option>
-                        {FINIALS.filter(f => selectedStyle.options.includes(f.id)).map(f => (
+                        {FINIALS.filter(f => selectedStyle.options.includes(f.id) && (!gate.finials || gate.finials.includes(f.id))).map(f => (
                             <option key={f.id} value={f.id}>{f.name}</option>
                         ))}
                     </select>
@@ -165,6 +198,7 @@ const Sidebar = ({ config, onConfigChange }) => {
             <Section title="Options">
                 {selectedStyle.options
                     .filter(o => !['pcf','pcb','fs','ft','fq','fp'].includes(o))
+                    .filter(o => !gate.options || gate.options.includes(o))
                     .map(optId => (
                         <label key={optId} style={styles.checkRow}>
                             <input
@@ -182,6 +216,7 @@ const Sidebar = ({ config, onConfigChange }) => {
             <Section title="Accessories">
                 {selectedStyle.accessories
                     .filter(a => a !== 'rem')
+                    .filter(a => !gate.accessories || gate.accessories.includes(a))
                     .map(accId => (
                         <label key={accId} style={styles.checkRow}>
                             <input
@@ -194,6 +229,7 @@ const Sidebar = ({ config, onConfigChange }) => {
                         </label>
                     ))}
             </Section>
+            </>)}
 
             {/* GET QUOTE */}
             <div style={styles.quoteSection}>
@@ -232,24 +268,13 @@ const styles = {
         borderRight: '1px solid #0f3460',
     },
     logo: {
-        padding: '24px 20px 16px',
+        padding: '20px 30px 16px',
         borderBottom: '1px solid #0f3460',
         textAlign: 'center',
     },
-    title: {
-        margin: 0,
-        fontSize: 22,
-        fontWeight: 700,
-        color: '#ffffff',
-        letterSpacing: 2,
-        textTransform: 'uppercase',
-    },
-    subtitle: {
-        margin: '4px 0 0',
-        fontSize: 11,
-        color: '#8899aa',
-        letterSpacing: 3,
-        textTransform: 'uppercase',
+    logoImg: {
+        width: 220,
+        height: 'auto',
     },
     section: {
         borderBottom: '1px solid #0f3460',
@@ -317,16 +342,51 @@ const styles = {
         borderRadius: '50%',
         border: '2px solid #2a2a4e',
         cursor: 'pointer',
-        transition: 'all 0.15s',
+        transition: 'all 0.2s ease-in-out',
+    },
+    colorSwatchHover: {
+        transform: 'scale(1.2) translateY(-5px)',
+        boxShadow: '0 5px 15px rgba(0,0,0,0.4)',
     },
     colorSwatchActive: {
         borderColor: '#e94560',
         boxShadow: '0 0 0 2px #e94560',
     },
+    colorTooltip: {
+        position: 'absolute',
+        bottom: '100%',
+        left: '50%',
+        transform: 'translateX(-50%)',
+        marginBottom: 6,
+        padding: '4px 10px',
+        backgroundColor: '#0d1b2a',
+        color: '#ffffff',
+        fontSize: 12,
+        fontWeight: 700,
+        borderRadius: 4,
+        whiteSpace: 'nowrap',
+        pointerEvents: 'none',
+        zIndex: 10,
+    },
     colorLabel: {
         marginTop: 8,
         fontSize: 12,
         color: '#8899aa',
+    },
+    modeBanner: {
+        display: 'flex',
+        alignItems: 'center',
+        gap: 10,
+        padding: '12px 20px',
+        backgroundColor: '#1a1a2e',
+        borderBottom: '1px solid #0f3460',
+        color: '#8899aa',
+        fontSize: 12,
+        fontStyle: 'italic',
+    },
+    modeBannerIcon: {
+        fontSize: 18,
+        opacity: 0.6,
     },
     checkRow: {
         display: 'flex',
