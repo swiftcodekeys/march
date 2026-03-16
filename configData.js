@@ -36,7 +36,7 @@ export var FENCE_STYLES = [
   {
     id: 'uaf_201', code: 'UAF-201', name: 'Horizon Pro', subtitle: 'Flat Top · 1½" Spacing',
     category: 'flat', series: '201', hasFinials: false,
-    supports3D: false, renderMode: 'preview', meshCount: null,
+    supports3D: true, renderMode: '3d', meshCount: 27,
     options: ['pcf','pcb','res','ufr','mdr','xlr'],
     accessories: ['tcr','tbu','bcr','bbu'],
     leafDefault: '2', postDefault: 'po14',
@@ -68,7 +68,7 @@ export var FENCE_STYLES = [
   {
     id: 'uas_101', code: 'UAS-101', name: 'Charleston Pro', subtitle: 'Spear Top · 1½" Spacing',
     category: 'spear', series: '100', hasFinials: true,
-    supports3D: false, renderMode: 'preview', meshCount: null,
+    supports3D: true, renderMode: '3d', meshCount: 53,
     options: ['pcf','pcb','fs','ft','fq','fp','res','ufr','mdr','xlr'],
     accessories: ['tcr','tbu','bcr','bbu'],
     leafDefault: '1', postDefault: 'po14',
