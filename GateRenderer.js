@@ -300,16 +300,22 @@ GateRenderer.prototype.buildGate = function(config) {
         gate.add(mesh);
     });
 
-    // Res pickets — Ultra always loads these (verified from scene extraction)
+    // Res/extra pickets — Ultra loads these for ALL styles but only makes them
+    // visible for Pro spacing styles (pi=201, pi=101). In Ultra's viz():
+    //   if(stlArr[gN].pi == '201' || stlArr[gN].pi == '101'){ xtr = true; }
+    //   if(xtr==true){ grptx.visible = true; grpbx.visible = true; }
     // pbRes uses separate clip plane for puppy support
+    var isProSpacing = styleDef && (styleDef.code === 'UAF-201' || styleDef.code === 'UAS-101');
     loader.load(getModelPath('ptRes', config), function(geo) {
         var mesh = new THREE.Mesh(geo, makeClipMat(clips.pt));
         snap(mesh, lt.picketTop);
+        mesh.visible = isProSpacing;
         gate.add(mesh);
     });
     loader.load(getModelPath('pbRes', config), function(geo) {
         var mesh = new THREE.Mesh(geo, makeClipMat(clips.pbRes));
         snap(mesh, M_IDENTITY);
+        mesh.visible = isProSpacing;
         gate.add(mesh);
     });
 
