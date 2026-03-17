@@ -3,6 +3,7 @@
  */
 import React, { useEffect } from 'react';
 import { COLORS, FONTS } from '../styles/quizStyles';
+import useMediaQuery from '../useMediaQuery';
 
 var KEYFRAMES_ID = 'quiz-insight-cards-keyframes';
 
@@ -69,6 +70,8 @@ function InsightCard({ insight, index }) {
 }
 
 export default function InsightCards({ insights }) {
+  var isMobile = useMediaQuery('(max-width: 768px)');
+
   useEffect(function () {
     injectKeyframes();
   }, []);
@@ -79,7 +82,7 @@ export default function InsightCards({ insights }) {
     <div style={{ marginTop: 24 }}>
       <div style={{
         display: 'grid',
-        gridTemplateColumns: 'repeat(3, 1fr)',
+        gridTemplateColumns: isMobile ? '1fr' : 'repeat(3, 1fr)',
         gap: 20,
       }}>
         {insights.map(function (insight, i) {

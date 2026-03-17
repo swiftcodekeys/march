@@ -3,6 +3,7 @@
  */
 import React, { useEffect, useRef, useState } from 'react';
 import { COLORS, FONTS } from '../styles/quizStyles';
+import useMediaQuery from '../useMediaQuery';
 
 var KEYFRAMES_ID = 'quiz-score-gauge-keyframes';
 
@@ -32,6 +33,7 @@ function getGradientColors(tierLabel) {
 }
 
 export default function ScoreGauge({ score, tier, name }) {
+  var isMobile = useMediaQuery('(max-width: 768px)');
   var _displayScore = useState(0), displayScore = _displayScore[0], setDisplayScore = _displayScore[1];
   var _dashOffset = useState(CIRCUMFERENCE), dashOffset = _dashOffset[0], setDashOffset = _dashOffset[1];
   var animRef = useRef(null);
@@ -75,7 +77,7 @@ export default function ScoreGauge({ score, tier, name }) {
     <div style={{
       background: COLORS.white,
       borderRadius: 20,
-      padding: '52px 44px',
+      padding: isMobile ? '36px 20px' : '52px 44px',
       boxShadow: '0 4px 32px rgba(0,0,0,0.08)',
       textAlign: 'center',
       animation: 'quizGaugeFadeIn 0.6s ease both',
@@ -105,8 +107,8 @@ export default function ScoreGauge({ score, tier, name }) {
       </p>
 
       {/* SVG Gauge */}
-      <div style={{ position: 'relative', display: 'inline-block', width: 200, height: 200 }}>
-        <svg width="200" height="200" viewBox="0 0 100 100">
+      <div style={{ position: 'relative', display: 'inline-block', width: isMobile ? 160 : 200, height: isMobile ? 160 : 200 }}>
+        <svg width={isMobile ? '160' : '200'} height={isMobile ? '160' : '200'} viewBox="0 0 100 100">
           <defs>
             <linearGradient id={gradId} x1="0%" y1="0%" x2="100%" y2="100%">
               <stop offset="0%" stopColor={gradColors[0]} />

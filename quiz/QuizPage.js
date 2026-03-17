@@ -6,6 +6,7 @@ import React, { useEffect } from 'react';
 import { QuizProvider, useQuiz } from './QuizContext';
 import { QUESTIONS, TOTAL_QUESTIONS } from './quizData';
 import { COLORS, FONTS } from './styles/quizStyles';
+import useMediaQuery from './useMediaQuery';
 import LandingHero from './components/LandingHero';
 import ValueProp from './components/ValueProp';
 import Credibility from './components/Credibility';
@@ -79,6 +80,7 @@ function BottomCTA({ onStart }) {
 }
 
 function QuizContent() {
+  var isMobile = useMediaQuery('(max-width: 768px)');
   var _useQuiz = useQuiz(), state = _useQuiz.state, dispatch = _useQuiz.dispatch;
 
   useEffect(function () {
@@ -96,12 +98,17 @@ function QuizContent() {
     };
   }, []);
 
+  // Scroll to top on all phase transitions
+  useEffect(function () {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, [state.phase]);
+
   // Scroll to top when question changes
   useEffect(function () {
     if (state.phase === 'quiz') {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
-  }, [state.currentQuestion, state.phase]);
+  }, [state.currentQuestion]);
 
   function handleStart() {
     dispatch({ type: 'START_QUIZ' });
@@ -160,7 +167,7 @@ function QuizContent() {
         <div style={{
           maxWidth: 960,
           margin: '0 auto',
-          padding: '40px 32px',
+          padding: isMobile ? '24px 16px' : '40px 32px',
         }}>
           <ProgressBar
             current={state.currentQuestion}

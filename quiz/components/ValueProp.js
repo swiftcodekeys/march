@@ -3,6 +3,7 @@
  */
 import React, { useState } from 'react';
 import { COLORS, FONTS } from '../styles/quizStyles';
+import useMediaQuery from '../useMediaQuery';
 
 const CARDS = [
   {
@@ -135,10 +136,12 @@ function Card({ card }) {
 }
 
 export default function ValueProp() {
+  var isMobile = useMediaQuery('(max-width: 768px)');
+
   return (
     <div style={styles.section}>
       <p style={styles.label}>TAKE THIS QUIZ SO WE CAN HELP YOU WITH</p>
-      <div style={styles.grid}>
+      <div style={Object.assign({}, styles.grid, isMobile ? { flexDirection: 'column', alignItems: 'center' } : {})}>
         {CARDS.map(function (card) {
           return <Card key={card.icon} card={card} />;
         })}

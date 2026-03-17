@@ -9,6 +9,7 @@ import { TOTAL_QUESTIONS } from '../quizData';
 import { calculateScore, matchSystem } from '../matchingEngine';
 import { emailSubmitted, quizCompleted } from '../analytics';
 import ProgressBar from './ProgressBar';
+import useMediaQuery from '../useMediaQuery';
 
 var KEYFRAMES_ID = 'quiz-pulse-glow-keyframes';
 
@@ -30,6 +31,7 @@ function StarIcon() {
 }
 
 export default function EmailGate() {
+  var isMobile = useMediaQuery('(max-width: 768px)');
   var _useQuiz = useQuiz(), state = _useQuiz.state, dispatch = _useQuiz.dispatch;
 
   var _name = useState(''), name = _name[0], setName = _name[1];
@@ -90,6 +92,7 @@ export default function EmailGate() {
 
   var inputBase = {
     width: '100%',
+    maxWidth: isMobile ? '100%' : undefined,
     border: '2px solid ' + COLORS.border,
     borderRadius: 12,
     fontSize: 17,
@@ -129,7 +132,7 @@ export default function EmailGate() {
       <div style={{
         maxWidth: 960,
         margin: '0 auto',
-        padding: '40px 32px',
+        padding: isMobile ? '24px 16px' : '40px 32px',
       }}>
         {/* Progress bar at 100% with orange badge */}
         <div style={{ marginBottom: 28 }}>
@@ -179,7 +182,7 @@ export default function EmailGate() {
         <div style={{
           background: COLORS.white,
           borderRadius: 20,
-          padding: '48px 44px',
+          padding: isMobile ? '32px 20px' : '48px 44px',
           boxShadow: '0 4px 32px rgba(0,0,0,0.08)',
           maxWidth: 680,
           margin: '0 auto',

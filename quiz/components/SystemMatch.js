@@ -5,6 +5,7 @@ import React, { useState } from 'react';
 import { COLORS, FONTS } from '../styles/quizStyles';
 import { buildDesignStudioUrl } from '../matchingEngine';
 import { ctaClicked } from '../analytics';
+import useMediaQuery from '../useMediaQuery';
 
 // Simple inline SVG fence illustration
 function FenceIllustration({ isSpear }) {
@@ -126,6 +127,7 @@ function ActionButton({ children, href, onClick, primary }) {
 }
 
 export default function SystemMatch({ system, onRetake }) {
+  var isMobile = useMediaQuery('(max-width: 768px)');
   var _linkHover = useState(false), linkHovered = _linkHover[0], setLinkHovered = _linkHover[1];
   var isSpear = system.subtitle && system.subtitle.toLowerCase().indexOf('spear') !== -1;
   var studioUrl = buildDesignStudioUrl(system);
@@ -138,7 +140,7 @@ export default function SystemMatch({ system, onRetake }) {
     <div style={{
       background: COLORS.white,
       borderRadius: 20,
-      padding: '48px 44px',
+      padding: isMobile ? '32px 20px' : '48px 44px',
       boxShadow: '0 4px 32px rgba(0,0,0,0.08)',
       marginTop: 24,
     }}>
@@ -158,8 +160,9 @@ export default function SystemMatch({ system, onRetake }) {
       {/* Flex row: illustration + info */}
       <div style={{
         display: 'flex',
+        flexDirection: isMobile ? 'column' : 'row',
         gap: 32,
-        alignItems: 'flex-start',
+        alignItems: isMobile ? 'stretch' : 'flex-start',
         flexWrap: 'wrap',
       }}>
         <FenceIllustration isSpear={isSpear} />

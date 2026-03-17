@@ -5,6 +5,7 @@ import React, { useState, useEffect } from 'react';
 import { COLORS, FONTS } from '../styles/quizStyles';
 import { buildDesignStudioUrl } from '../matchingEngine';
 import { ctaClicked } from '../analytics';
+import useMediaQuery from '../useMediaQuery';
 
 var KEYFRAMES_ID = 'quiz-cta-section-keyframes';
 
@@ -191,6 +192,8 @@ function CTACard({ item, isPrimary, studioUrl }) {
 }
 
 export default function CTASection({ tier, system }) {
+  var isMobile = useMediaQuery('(max-width: 768px)');
+
   useEffect(function () {
     injectKeyframes();
   }, []);
@@ -202,7 +205,7 @@ export default function CTASection({ tier, system }) {
     <div style={{
       background: COLORS.navy,
       borderRadius: 20,
-      padding: 48,
+      padding: isMobile ? '32px 20px' : 48,
       marginTop: 24,
     }}>
       {/* Section label */}
@@ -221,7 +224,7 @@ export default function CTASection({ tier, system }) {
       {/* 2-column grid */}
       <div style={{
         display: 'grid',
-        gridTemplateColumns: '1fr 1fr',
+        gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr',
         gap: 20,
       }}>
         <CTACard item={content.primary} isPrimary={true} studioUrl={studioUrl} />

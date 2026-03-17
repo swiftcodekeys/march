@@ -3,6 +3,7 @@
  */
 import React from 'react';
 import { COLORS, FONTS } from '../styles/quizStyles';
+import useMediaQuery from '../useMediaQuery';
 
 const styles = {
   wrapper: {
@@ -70,6 +71,8 @@ const styles = {
 };
 
 export default function LandingHero({ onStart }) {
+  var isMobile = useMediaQuery('(max-width: 768px)');
+
   return (
     <div style={styles.wrapper}>
       {/* Subtle cloud shapes */}
@@ -84,10 +87,10 @@ export default function LandingHero({ onStart }) {
       </div>
 
       <div style={styles.content}>
-        <h1 style={styles.h1}>
+        <h1 style={Object.assign({}, styles.h1, isMobile ? { fontSize: 36 } : {})}>
           See Your Perfect Fence&nbsp;&mdash; Before You Buy
         </h1>
-        <p style={styles.sub}>
+        <p style={Object.assign({}, styles.sub, isMobile ? { fontSize: 16 } : {})}>
           Answer 15 quick questions. We'll match you to the right system and show
           you exactly what it looks like.
         </p>

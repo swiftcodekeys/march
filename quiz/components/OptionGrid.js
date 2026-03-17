@@ -4,6 +4,7 @@
 import React, { useRef, useEffect } from 'react';
 import { COLORS, FONTS } from '../styles/quizStyles';
 import { getIcon } from './QuizIcons';
+import useMediaQuery from '../useMediaQuery';
 
 var KEYFRAMES_ID = 'quiz-option-grid-keyframes';
 
@@ -82,6 +83,8 @@ function OptionCard({ option, isSelected, onSelect, index }) {
 }
 
 export default function OptionGrid({ options, selected, multiSelect, onSelect }) {
+  var isMobile = useMediaQuery('(max-width: 768px)');
+
   useEffect(function () {
     injectKeyframes();
   }, []);
@@ -93,7 +96,7 @@ export default function OptionGrid({ options, selected, multiSelect, onSelect })
   return (
     <div style={{
       display: 'grid',
-      gridTemplateColumns: 'repeat(3, 1fr)',
+      gridTemplateColumns: isMobile ? 'repeat(2, 1fr)' : 'repeat(3, 1fr)',
       gap: 16,
     }}>
       {options.map(function (opt, i) {
