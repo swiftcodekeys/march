@@ -22,6 +22,7 @@ import {
     ACCENT_CIRCLE_X, ACCENT_BUTTERFLY_X,
     FINIAL_POSITIONS, FINIAL_BASE_Y,
     PTRES_Y_UAF201,
+    HAVEN_RAIL_T1,
 } from './spatialConstants';
 import { getModelPath, FENCE_STYLES } from './configData';
 
@@ -228,8 +229,11 @@ GateRenderer.prototype.buildGate = function(config) {
     }
 
     // TOP RAILS — per-leaf Y positions
+    // Haven (UAB-200, gN==4): r1 rail sits at -0.07 offset (compressed top gap)
+    // vs standard -0.1905 offset. SPATIAL_TRUTH.json → rails → r1_second_rail_y → haven_gN4
+    var railT1Transform = (styleDef && styleDef.code === 'UAB-200') ? HAVEN_RAIL_T1 : lt.railT1;
     loader.load(getModelPath('railTop', config), function(geo) {
-        [lt.railT0, lt.railT1].forEach(function(m) {
+        [lt.railT0, railT1Transform].forEach(function(m) {
             var mesh = new THREE.Mesh(geo, makeMat());
             snap(mesh, m);
             gate.add(mesh);

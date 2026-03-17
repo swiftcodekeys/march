@@ -203,6 +203,12 @@ export var FINIAL_BASE_Y = {
     flat:  1.359,    // leaf=2 Vanguard
 };
 
+// Haven (UAB-200, gN==4) second rail position — compressed top rail gap
+// SPATIAL_TRUTH.json → rails → r1_second_rail_y → haven_gN4:
+//   r1y = htY - 0.07 + rH + fsv = 1.524 - 0.07 + (-0.035) + 0 = 1.419
+// Standard styles use htY - 0.1905 + rH + fsv = 1.2985
+export var HAVEN_RAIL_T1 = [1,0,0,0, 0,1,0,0, 0,0,1,0, 0,1.419,0,1];
+
 // Pro spacing ptRes (grptx) Y position for UAF-201 (Horizon Pro)
 // SPATIAL_TRUTH.json → picket_y_positions → grptx_y_by_style:
 //   UAF-201 no accent: tY + _12 + fsv - _7_5 = -0.610 + 0.3048 + 0 - 0.1905 = -0.4957
