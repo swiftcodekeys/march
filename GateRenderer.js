@@ -122,6 +122,19 @@ function GateRenderer(container) {
             });
     }
 
+    // Load bump map (Ultra uses bm.jpg at 2048x2048, ClampToEdgeWrapping)
+    var texLoader = new THREE.TextureLoader();
+    texLoader.load('gate_tool/t/bm.jpg', function(texture) {
+        texture.wrapS = THREE.ClampToEdgeWrapping;
+        texture.wrapT = THREE.ClampToEdgeWrapping;
+        self._bumpMap = texture;
+
+        // Retroactively apply to existing materials
+        if (self._lastConfig) {
+            self.updateMaterials(self._lastConfig);
+        }
+    });
+
     // Start render loop
     (function animate() {
         self._animId = requestAnimationFrame(animate);
