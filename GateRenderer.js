@@ -286,8 +286,9 @@ GateRenderer.prototype.buildGate = function(config) {
     });
 
     // PICKETS — per-leaf Y positions (fsv-adjusted)
-    // Odd picket top: Vanguard (leaf=2 + hasFinials) staggers odd pickets lower
-    var ptOddTransform = (hasFinials && ptOddStagger) ? ptOddStagger : picketTop;
+    // Odd picket top: only Vanguard (UAF-250) staggers odd pickets lower (f250v=0.205)
+    var isVanguard = styleDef && styleDef.code === 'UAF-250';
+    var ptOddTransform = (isVanguard && ptOddStagger) ? ptOddStagger : picketTop;
 
     // Even pickets
     loader.load(getModelPath('ptEven', config), function(geo) {
