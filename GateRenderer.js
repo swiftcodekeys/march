@@ -21,6 +21,7 @@ import {
     ACCENT_CIRCLE_BOTTOM_Y, ACCENT_BUTTERFLY_BOTTOM_Y,
     ACCENT_CIRCLE_X, ACCENT_BUTTERFLY_X,
     FINIAL_POSITIONS, FINIAL_BASE_Y,
+    PTRES_Y_UAF201,
 } from './spatialConstants';
 import { getModelPath, FENCE_STYLES } from './configData';
 
@@ -290,15 +291,16 @@ GateRenderer.prototype.buildGate = function(config) {
         gate.add(mesh);
     });
 
-    // Res/extra pickets — Ultra loads these for ALL styles but only makes them
-    // visible for Pro spacing styles (pi=201, pi=101). In Ultra's viz():
-    //   if(stlArr[gN].pi == '201' || stlArr[gN].pi == '101'){ xtr = true; }
-    //   if(xtr==true){ grptx.visible = true; grpbx.visible = true; }
-    // pbRes uses separate clip plane for puppy support
+    // Res/extra pickets — visible only for Pro spacing (pi=201, pi=101).
+    // ptRes Y position differs per style (SPATIAL_TRUTH.json → picket_y_positions → grptx_y_by_style):
+    //   UAF-201: Y = tY + _12 + fsv - _7_5 = -0.4957 (lower, so tight spacing only below 2nd rail)
+    //   UAS-101: Y = tY + _12 + fsv = lt.picketTop (same as normal pickets)
+    // pbRes uses separate clip plane for puppy support.
     var isProSpacing = styleDef && (styleDef.code === 'UAF-201' || styleDef.code === 'UAS-101');
+    var ptResTransform = (styleDef && styleDef.code === 'UAF-201') ? PTRES_Y_UAF201 : lt.picketTop;
     loader.load(getModelPath('ptRes', config), function(geo) {
         var mesh = new THREE.Mesh(geo, makeClipMat(clips.pt));
-        snap(mesh, lt.picketTop);
+        snap(mesh, ptResTransform);
         mesh.visible = isProSpacing;
         gate.add(mesh);
     });

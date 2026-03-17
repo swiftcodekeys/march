@@ -202,3 +202,9 @@ export var FINIAL_BASE_Y = {
     spear: 1.412,    // leaf=1 spear family
     flat:  1.359,    // leaf=2 Vanguard
 };
+
+// Pro spacing ptRes (grptx) Y position for UAF-201 (Horizon Pro)
+// SPATIAL_TRUTH.json → picket_y_positions → grptx_y_by_style:
+//   UAF-201 no accent: tY + _12 + fsv - _7_5 = -0.610 + 0.3048 + 0 - 0.1905 = -0.4957
+// UAS-101 uses same Y as normal pickets (tY + _12 + fsv = lt.picketTop), no separate constant needed.
+export var PTRES_Y_UAF201 = [1,0,0,0, 0,1,0,0, 0,0,1,0, 0,-0.4957,0,1];
