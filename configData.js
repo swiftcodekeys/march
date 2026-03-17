@@ -63,7 +63,7 @@ export var FENCE_STYLES = [
     supports3D: true, renderMode: '3d', meshCount: 53,
     options: ['pcf','pcb','fs','ft','fq','fp','res','ufr','mdr','xlr','pup'],
     accessories: ['tcr','tbu','scr','bcr','bbu'],
-    leafDefault: '1', postDefault: 'po14',
+    leafDefault: '2', postDefault: 'po14',
   },
   {
     id: 'uas_101', code: 'UAS-101', name: 'Charleston Pro', subtitle: 'Spear Top · 1½" Spacing',
@@ -71,7 +71,7 @@ export var FENCE_STYLES = [
     supports3D: true, renderMode: '3d', meshCount: 53,
     options: ['pcf','pcb','fs','ft','fq','fp','res','ufr','mdr','xlr'],
     accessories: ['tcr','tbu','bcr','bbu'],
-    leafDefault: '1', postDefault: 'po14',
+    leafDefault: '2', postDefault: 'po14',
   },
   {
     id: 'uas_150', code: 'UAS-150', name: 'Savannah', subtitle: 'Staggered Spear',
@@ -79,7 +79,7 @@ export var FENCE_STYLES = [
     supports3D: true, renderMode: '3d', meshCount: 53,
     options: ['pcf','pcb','fs','ft','fq','fp','res','ufr','mdr','xlr','pup'],
     accessories: ['tcr','tbu','scr','bcr','bbu'],
-    leafDefault: '1', postDefault: 'po14',
+    leafDefault: '2', postDefault: 'po14',
   },
   // --- Unsupported styles (no proven 3D scene data) ---
   {
