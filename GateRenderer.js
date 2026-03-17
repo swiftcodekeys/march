@@ -75,8 +75,54 @@ function GateRenderer(container) {
     this.gate = new THREE.Object3D();
     this.scene.add(this.gate);
 
-    // Start render loop
+    // Environment map — PMREM-processed HDR (matches Ultra exactly)
+    this._envMap = null;
+    this._bumpMap = null;
     var self = this;
+
+    // Load HDR cube map
+    // NOTE: r86 HDRCubeTextureLoader has NO .setPath() method — must use full paths.
+    // Also, loadHDRData has a `this.manager` binding quirk (uses undefined, falls back
+    // to DefaultLoadingManager) — this is expected and not a bug.
+    var hdrPaths = [
+        'gate_tool/t/hdr/px.hdr', 'gate_tool/t/hdr/nx.hdr',
+        'gate_tool/t/hdr/py.hdr', 'gate_tool/t/hdr/ny.hdr',
+        'gate_tool/t/hdr/pz.hdr', 'gate_tool/t/hdr/nz.hdr'
+    ];
+    if (THREE.HDRCubeTextureLoader) {
+        new THREE.HDRCubeTextureLoader()
+            .load(THREE.UnsignedByteType, hdrPaths, function(hdrCubeMap) {
+                var pmremGenerator = new THREE.PMREMGenerator(hdrCubeMap);
+                pmremGenerator.update(self.renderer);
+
+                var pmremCubeUVPacker = new THREE.PMREMCubeUVPacker(pmremGenerator.cubeLods, pmremGenerator.numLods);
+                pmremCubeUVPacker.update(self.renderer);
+
+                self._envMap = pmremCubeUVPacker.CubeUVRenderTarget.texture;
+
+                // Retroactively apply to existing materials
+                if (self._lastConfig) {
+                    self.updateMaterials(self._lastConfig);
+                }
+
+                // Clean up
+                pmremGenerator.dispose();
+                pmremCubeUVPacker.dispose();
+            }, undefined, function(err) {
+                // HDR failed — fall back to PNG cube map
+                console.warn('HDR env map failed, falling back to PNG:', err);
+                var loader = new THREE.CubeTextureLoader();
+                loader.setPath('gate_tool/t/hdr/');
+                loader.load(['px.png','nx.png','py.png','ny.png','pz.png','nz.png'], function(cubeMap) {
+                    self._envMap = cubeMap;
+                    if (self._lastConfig) {
+                        self.updateMaterials(self._lastConfig);
+                    }
+                });
+            });
+    }
+
+    // Start render loop
     (function animate() {
         self._animId = requestAnimationFrame(animate);
         self.renderer.render(self.scene, self.camera);
