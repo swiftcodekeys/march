@@ -153,12 +153,12 @@ GateRenderer.prototype.buildGate = function(config) {
         out[13] = out[13] + fsvOffset;
         return out;
     }
-    var railT0    = applyFsv(lt.railT0, fsv);
-    var railT1    = applyFsv(lt.railT1, fsv);
-    var railB0    = applyFsv(lt.railB0, fsv);
-    var railB1    = applyFsv(lt.railB1, fsv);
-    var railB2    = applyFsv(lt.railB2, fsv);
-    var picketTop = applyFsv(lt.picketTop, fsv);
+    var railT0    = applyFsv(lt.railT0, fsv);        // full fsv
+    var railT1    = applyFsv(lt.railT1, fsv);        // full fsv
+    var railB0    = applyFsv(lt.railB0, fsv / 2);    // half fsv — midpoint of T1 and B2
+    var railB1    = lt.railB1;                        // NO fsv — bY + offset, fixed
+    var railB2    = lt.railB2;                        // NO fsv — bY = 0.155 always
+    var picketTop = applyFsv(lt.picketTop, fsv);      // full fsv
     var ptOddStagger = (lt.picketTopOddStagger) ? applyFsv(lt.picketTopOddStagger, fsv) : null;
 
     // Arch-specific clipping (verified against legacy ultra_dsg_min.js)
