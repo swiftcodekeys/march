@@ -151,6 +151,8 @@ GateRenderer.prototype.resize = function(w, h) {
 
 GateRenderer.prototype.dispose = function() {
     if (this._animId) cancelAnimationFrame(this._animId);
+    if (this._envMap) this._envMap.dispose();
+    if (this._bumpMap) this._bumpMap.dispose();
     if (this._container && this.renderer.domElement) {
         this._container.removeChild(this.renderer.domElement);
     }
