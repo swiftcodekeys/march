@@ -6,14 +6,14 @@
 var MODEL_BASE = 'gate_tool/m/';
 
 export var COLORS = [
-  { id: 0, name: 'Textured Khaki',   hex: '#cdbeaf', threeHex: 0xcdbeaf, metalness: 0.2, roughness: 0.4 },
-  { id: 1, name: 'Gloss Bronze',     hex: '#42382c', threeHex: 0x42382c, metalness: 0.3, roughness: 0.1 },
-  { id: 2, name: 'Textured Bronze',  hex: '#42382c', threeHex: 0x42382c, metalness: 0.3, roughness: 0.4 },
-  { id: 3, name: 'Gloss White',      hex: '#f4f4f4', threeHex: 0xF8F5F6, metalness: 0.2, roughness: 0.2 },
-  { id: 4, name: 'Textured White',   hex: '#f2f2f2', threeHex: 0xF8F5F6, metalness: 0.1, roughness: 0.2 },
-  { id: 5, name: 'Gloss Black',      hex: '#090909', threeHex: 0x080808, metalness: 0.2, roughness: 0.2 },
-  { id: 6, name: 'Textured Black',   hex: '#0c0c0c', threeHex: 0x0c0c0c, metalness: 0.2, roughness: 0.4 },
-  { id: 7, name: 'Silver',           hex: '#c8c8c8', threeHex: 0xc8c8c8, metalness: 0.8, roughness: 0.2 },
+  { id: 0, name: 'Textured Khaki',   hex: '#cdbeaf', threeHex: 0xcdbeaf, metalness: 0.2, roughness: 0.4, envMapIntensity: 2.6, bumpScale: 0.002,  ao: 0.8 },
+  { id: 1, name: 'Gloss Bronze',     hex: '#42382c', threeHex: 0x42382c, metalness: 0.3, roughness: 0.1, envMapIntensity: 4.0, bumpScale: 0.0001, ao: 0.8 },
+  { id: 2, name: 'Textured Bronze',  hex: '#42382c', threeHex: 0x42382c, metalness: 0.3, roughness: 0.4, envMapIntensity: 5.5, bumpScale: 0.0015, ao: 0.8 },
+  { id: 3, name: 'Gloss White',      hex: '#f4f4f4', threeHex: 0xF8F5F6, metalness: 0.2, roughness: 0.2, envMapIntensity: 2.5, bumpScale: 0.0001, ao: 0.5 },
+  { id: 4, name: 'Textured White',   hex: '#f2f2f2', threeHex: 0xF8F5F6, metalness: 0.1, roughness: 0.2, envMapIntensity: 2.5, bumpScale: 0.002,  ao: 0.3 },
+  { id: 5, name: 'Gloss Black',      hex: '#090909', threeHex: 0x080808, metalness: 0.2, roughness: 0.2, envMapIntensity: 8.0, bumpScale: 0.0001, ao: 1.0 },
+  { id: 6, name: 'Textured Black',   hex: '#0c0c0c', threeHex: 0x0c0c0c, metalness: 0.2, roughness: 0.4, envMapIntensity: 9.0, bumpScale: 0.0015, ao: 1.0 },
+  { id: 7, name: 'Silver',           hex: '#c8c8c8', threeHex: 0xFEF8F2, metalness: 0.8, roughness: 0.2, envMapIntensity: 5.5, bumpScale: 0.0002, ao: 0.6 },
 ];
 
 export var HEIGHTS = [
