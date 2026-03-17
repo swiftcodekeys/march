@@ -5,32 +5,8 @@ import React, { useState } from 'react';
 import { COLORS, FONTS } from '../styles/quizStyles';
 import { buildDesignStudioUrl } from '../matchingEngine';
 import { ctaClicked } from '../analytics';
+import { getFenceImage } from '../fenceImages';
 
-// Small fence thumbnail SVG
-function FenceThumbnail({ isSpear }) {
-  return (
-    <svg width="100" height="72" viewBox="0 0 100 72" style={{
-      background: 'linear-gradient(180deg, #e8f1f5 0%, #f5f7fa 100%)',
-      borderRadius: 10,
-      flexShrink: 0,
-    }}>
-      {/* Posts */}
-      <rect x="8" y="8" width="4" height="56" rx="1" fill={COLORS.navy} opacity="0.8" />
-      <rect x="88" y="8" width="4" height="56" rx="1" fill={COLORS.navy} opacity="0.8" />
-      {/* Rails */}
-      <rect x="8" y="12" width="84" height="3" rx="1" fill={COLORS.navy} opacity="0.6" />
-      <rect x="8" y="38" width="84" height="3" rx="1" fill={COLORS.navy} opacity="0.6" />
-      <rect x="8" y="58" width="84" height="3" rx="1" fill={COLORS.navy} opacity="0.6" />
-      {/* Pickets */}
-      {[24, 40, 56, 72].map(function (x, i) {
-        var top = isSpear && i % 2 === 1 ? 6 : 10;
-        return (
-          <rect key={i} x={x - 1.5} y={top} width="3" height={54 - (top - 10)} rx="0.5" fill={COLORS.navy} opacity="0.7" />
-        );
-      })}
-    </svg>
-  );
-}
 
 function TintButton({ children, href, onClick, tint }) {
   var _hover = useState(false), hovered = _hover[0], setHovered = _hover[1];
@@ -81,7 +57,6 @@ function TintButton({ children, href, onClick, tint }) {
 }
 
 export default function SystemSuggest({ system, tier }) {
-  var isSpear = system.subtitle && system.subtitle.toLowerCase().indexOf('spear') !== -1;
   var studioUrl = buildDesignStudioUrl(system);
   var isMid = tier.label === 'Getting There';
 
@@ -142,7 +117,24 @@ export default function SystemSuggest({ system, tier }) {
         borderRadius: 14,
         flexWrap: 'wrap',
       }}>
-        <FenceThumbnail isSpear={isSpear} />
+        <div style={{
+          width: 100,
+          height: 72,
+          flexShrink: 0,
+          borderRadius: 10,
+          overflow: 'hidden',
+          background: '#f5f7fa',
+        }}>
+          <img
+            src={getFenceImage(system.id)}
+            alt={system.name}
+            style={{
+              width: '100%',
+              height: '100%',
+              objectFit: 'cover',
+            }}
+          />
+        </div>
 
         <div style={{ flex: 1, minWidth: 160 }}>
           <h4 style={{

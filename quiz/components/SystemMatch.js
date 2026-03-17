@@ -6,52 +6,8 @@ import { COLORS, FONTS } from '../styles/quizStyles';
 import { buildDesignStudioUrl } from '../matchingEngine';
 import { ctaClicked } from '../analytics';
 import useMediaQuery from '../useMediaQuery';
+import { getFenceImage } from '../fenceImages';
 
-// Simple inline SVG fence illustration
-function FenceIllustration({ isSpear }) {
-  var picketTops = isSpear
-    ? [10, 8, 10, 8, 10, 8]
-    : [10, 10, 10, 10, 10, 10];
-  var picketXs = [60, 100, 140, 180, 220, 260];
-
-  return (
-    <svg width="320" height="220" viewBox="0 0 320 220" style={{
-      background: 'linear-gradient(180deg, #e8f1f5 0%, #f5f7fa 100%)',
-      borderRadius: 14,
-      flexShrink: 0,
-    }}>
-      {/* Ground line */}
-      <line x1="30" y1="190" x2="290" y2="190" stroke="#ccc" strokeWidth="1" />
-      {/* Posts */}
-      <rect x="38" y="30" width="8" height="160" rx="2" fill={COLORS.navy} opacity="0.85" />
-      <rect x="274" y="30" width="8" height="160" rx="2" fill={COLORS.navy} opacity="0.85" />
-      {/* Post caps */}
-      <circle cx="42" cy="28" r="6" fill={COLORS.navy} opacity="0.85" />
-      <circle cx="278" cy="28" r="6" fill={COLORS.navy} opacity="0.85" />
-      {/* Top rail */}
-      <rect x="38" y="38" width="248" height="6" rx="2" fill={COLORS.navy} opacity="0.7" />
-      {/* Mid rail */}
-      <rect x="38" y="110" width="248" height="6" rx="2" fill={COLORS.navy} opacity="0.7" />
-      {/* Bottom rail */}
-      <rect x="38" y="170" width="248" height="6" rx="2" fill={COLORS.navy} opacity="0.7" />
-      {/* Pickets */}
-      {picketXs.map(function (x, i) {
-        return (
-          <g key={i}>
-            <rect x={x - 3} y={picketTops[i] + 28} width="6" height={162 - picketTops[i]} rx="1" fill={COLORS.navy} opacity="0.75" />
-            {isSpear && picketTops[i] < 10 && (
-              <polygon
-                points={(x - 4) + ',' + (picketTops[i] + 30) + ' ' + x + ',' + (picketTops[i] + 20) + ' ' + (x + 4) + ',' + (picketTops[i] + 30)}
-                fill={COLORS.navy}
-                opacity="0.75"
-              />
-            )}
-          </g>
-        );
-      })}
-    </svg>
-  );
-}
 
 // Spec grid item
 function SpecItem({ label, value }) {
@@ -129,7 +85,6 @@ function ActionButton({ children, href, onClick, primary }) {
 export default function SystemMatch({ system, onRetake }) {
   var isMobile = useMediaQuery('(max-width: 768px)');
   var _linkHover = useState(false), linkHovered = _linkHover[0], setLinkHovered = _linkHover[1];
-  var isSpear = system.subtitle && system.subtitle.toLowerCase().indexOf('spear') !== -1;
   var studioUrl = buildDesignStudioUrl(system);
 
   var description = 'The ' + system.name + ' (' + system.series + ') is engineered for strength and style. ' +
@@ -165,7 +120,24 @@ export default function SystemMatch({ system, onRetake }) {
         alignItems: isMobile ? 'stretch' : 'flex-start',
         flexWrap: 'wrap',
       }}>
-        <FenceIllustration isSpear={isSpear} />
+        <div style={{
+          width: isMobile ? '100%' : 320,
+          height: isMobile ? 200 : 220,
+          flexShrink: 0,
+          borderRadius: 14,
+          overflow: 'hidden',
+          background: '#f5f7fa',
+        }}>
+          <img
+            src={getFenceImage(system.id)}
+            alt={system.name + ' aluminum fence'}
+            style={{
+              width: '100%',
+              height: '100%',
+              objectFit: 'cover',
+            }}
+          />
+        </div>
 
         <div style={{ flex: 1, minWidth: 240 }}>
           {/* System name */}
