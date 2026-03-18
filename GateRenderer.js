@@ -17,9 +17,8 @@ import {
     CENTER_GAP,
     CLIP_POST, CLIP_PO23, CLIP_PT, CLIP_PB,
     CLIP_PB_PUPPY_STD, CLIP_PB_PUPPY_CLP,
-    ACCENT_CIRCLE_Y, ACCENT_BUTTERFLY_Y,
     ACCENT_CIRCLE_BOTTOM_Y, ACCENT_BUTTERFLY_BOTTOM_Y,
-    ACCENT_CIRCLE_X, ACCENT_BUTTERFLY_X,
+    ACCENT_POSITIONS, ACCENT_BASE_Y,
     FINIAL_POSITIONS, FINIAL_BASE_Y,
     PTRES_Y_UAF201,
     HAVEN_RAIL_T1,
@@ -452,49 +451,59 @@ GateRenderer.prototype.buildGate = function(config) {
                 });
             });
         }
-        // CIRCLE (top) — 28 circle meshes (14/side), CIRCLE_X positions, Y=1.397
-        // Verified: Ultra "Circle" accent, Standard arch, 292v model acc.json
+        // CIRCLE (top) — position arrays from Ultra, per leaf+arch
+        // Ultra uses mesh.position.set(x, baseY + pos[1], z) for each accent
         if (config.accessories.tcr) {
-            loader.load(getModelPath('circle', config), function(geo) {
-                ACCENT_CIRCLE_X.forEach(function(x) {
-                    var mesh = new THREE.Mesh(geo, makeMat());
-                    snap(mesh, [1,0,0,0, 0,1,0,0, 0,0,1,0, x,ACCENT_CIRCLE_Y,0,1]);
-                    gate.add(mesh);
+            var circlePositions = ACCENT_POSITIONS.circle[leaf] && ACCENT_POSITIONS.circle[leaf][archId];
+            if (circlePositions) {
+                loader.load(getModelPath('circle', config), function(geo) {
+                    circlePositions.forEach(function(pos) {
+                        var mesh = new THREE.Mesh(geo, makeMat());
+                        mesh.position.set(pos[0], ACCENT_BASE_Y.circle + pos[1], pos[2]);
+                        gate.add(mesh);
+                    });
                 });
-            });
+            }
         }
-        // CIRCLES AT BASE — 28 circle meshes, CIRCLE_X positions, Y=0.19
-        // Verified: Ultra "Circles at Base" accent
+        // CIRCLES AT BASE — uses same position arrays but at bottom Y
+        // (base accents don't have separate Ultra position arrays yet, so use circle positions with bottom Y)
         if (config.accessories.bcr) {
-            loader.load(getModelPath('circle', config), function(geo) {
-                ACCENT_CIRCLE_X.forEach(function(x) {
-                    var mesh = new THREE.Mesh(geo, makeMat());
-                    snap(mesh, [1,0,0,0, 0,1,0,0, 0,0,1,0, x,ACCENT_CIRCLE_BOTTOM_Y,0,1]);
-                    gate.add(mesh);
+            var circleBasePositions = ACCENT_POSITIONS.circle[leaf] && ACCENT_POSITIONS.circle[leaf][archId];
+            if (circleBasePositions) {
+                loader.load(getModelPath('circle', config), function(geo) {
+                    circleBasePositions.forEach(function(pos) {
+                        var mesh = new THREE.Mesh(geo, makeMat());
+                        mesh.position.set(pos[0], ACCENT_CIRCLE_BOTTOM_Y, pos[2]);
+                        gate.add(mesh);
+                    });
                 });
-            });
+            }
         }
-        // BUTTERFLY (top) — 26 butterfly meshes (13/side), BUTTERFLY_X positions, Y=1.363
-        // Verified: Ultra "Butterfly" accent, Standard arch, 952v model acb.json
+        // BUTTERFLY (top) — position arrays from Ultra, per leaf+arch
         if (config.accessories.tbu) {
-            loader.load(getModelPath('butterfly', config), function(geo) {
-                ACCENT_BUTTERFLY_X.forEach(function(x) {
-                    var mesh = new THREE.Mesh(geo, makeMat());
-                    snap(mesh, [1,0,0,0, 0,1,0,0, 0,0,1,0, x,ACCENT_BUTTERFLY_Y,0,1]);
-                    gate.add(mesh);
+            var butterflyPositions = ACCENT_POSITIONS.butterfly[leaf] && ACCENT_POSITIONS.butterfly[leaf][archId];
+            if (butterflyPositions) {
+                loader.load(getModelPath('butterfly', config), function(geo) {
+                    butterflyPositions.forEach(function(pos) {
+                        var mesh = new THREE.Mesh(geo, makeMat());
+                        mesh.position.set(pos[0], ACCENT_BASE_Y.butterfly + pos[1], pos[2]);
+                        gate.add(mesh);
+                    });
                 });
-            });
+            }
         }
-        // BUTTERFLIES AT BASE — 26 butterfly meshes, BUTTERFLY_X positions, Y=0.2185
-        // Verified: Ultra "Butterflies at Base" accent (Y differs from circles!)
+        // BUTTERFLIES AT BASE — uses butterfly position arrays with bottom Y
         if (config.accessories.bbu) {
-            loader.load(getModelPath('butterfly', config), function(geo) {
-                ACCENT_BUTTERFLY_X.forEach(function(x) {
-                    var mesh = new THREE.Mesh(geo, makeMat());
-                    snap(mesh, [1,0,0,0, 0,1,0,0, 0,0,1,0, x,ACCENT_BUTTERFLY_BOTTOM_Y,0,1]);
-                    gate.add(mesh);
+            var butterflyBasePositions = ACCENT_POSITIONS.butterfly[leaf] && ACCENT_POSITIONS.butterfly[leaf][archId];
+            if (butterflyBasePositions) {
+                loader.load(getModelPath('butterfly', config), function(geo) {
+                    butterflyBasePositions.forEach(function(pos) {
+                        var mesh = new THREE.Mesh(geo, makeMat());
+                        mesh.position.set(pos[0], ACCENT_BUTTERFLY_BOTTOM_Y, pos[2]);
+                        gate.add(mesh);
+                    });
                 });
-            });
+            }
         }
     }
 };
