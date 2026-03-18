@@ -55,7 +55,7 @@ var StyleTab = function(props) {
                             <img
                                 src={STYLE_THUMBS[style.id]}
                                 alt={style.name}
-                                style={style.id === 'uas_101' ? { objectPosition: 'right top', transform: 'scale(1.6)', transformOrigin: 'right top', filter: 'contrast(1.8) brightness(1.1)' } : {}}
+                                style={style.id === 'uas_101' ? { objectPosition: 'right 8%', transform: 'scale(1.6)', transformOrigin: 'right 8%', filter: 'contrast(1.8) brightness(1.1)' } : {}}
                             />
                         </div>
                         <div className="style-card-info">
