@@ -5,7 +5,6 @@ import TopNav from './TopNav';
 import BottomStrip from './BottomStrip';
 import FlyoutPanel from './FlyoutPanel';
 import BacklinksFooter from './BacklinksFooter';
-import MagnifierLens from './MagnifierLens';
 import ProgressIndicator from './ProgressIndicator';
 import SocialProof from './SocialProof';
 import { COLORS, FENCE_STYLES } from './configData';
@@ -139,7 +138,6 @@ var DesignStudio = function() {
             <TopNav activeScene={activeTab} onSceneChange={setActiveTab} />
             <div className="viewport-wrap">
                 <UnifiedCanvas config={config} />
-                <MagnifierLens />
                 <ProgressIndicator config={config} />
                 <SocialProof />
             </div>

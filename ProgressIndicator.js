@@ -16,7 +16,7 @@ function getCategoryStatus(config) {
         size: true,      // always has default
         options: true,   // arch always has default 'e'
         puppy: !!(config.accessories && config.accessories.pup),
-        details: !!(config.postCap || config.finial),
+        details: !!config.finial,
     };
 }
 

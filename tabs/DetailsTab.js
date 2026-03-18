@@ -68,17 +68,8 @@ var DetailsTab = function(props) {
                 <div className="section-group">
                     <div className="section-title">Post Caps</div>
                     <div className="option-row">
-                        <div
-                            className={'opt-card' + (config.postCap === null ? ' active' : '')}
-                            onClick={function() { handlePostCapChange(null); }}
-                        >
-                            <div className="opt-card-img" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                                <span style={{ color: 'rgba(240,242,245,0.3)', fontSize: '20px' }}>-</span>
-                            </div>
-                            <div className="opt-card-label">None</div>
-                        </div>
                         {filteredPostCaps.map(function(pc) {
-                            var isActive = config.postCap === pc.id;
+                            var isActive = (config.postCap || 'pcf') === pc.id;
                             return (
                                 <div
                                     key={pc.id}

@@ -160,9 +160,9 @@ body {
   background: var(--dark-panel);
   border-top: 1px solid var(--border);
   padding: 18px 48px 14px;
-  height: 285px;
-  min-height: 285px;
-  max-height: 285px;
+  height: 240px;
+  min-height: 240px;
+  max-height: 240px;
   overflow: hidden;
   display: flex;
   flex-direction: column;
@@ -578,14 +578,6 @@ body {
   font-weight: 500;
 }
 
-/* --- Magnifier Lens --- */
-.mag {
-  position: absolute; width: 80px; height: 80px; border-radius: 50%;
-  border: 2px solid rgba(255,255,255,0.3);
-  pointer-events: none; display: none; z-index: 20;
-  box-shadow: 0 0 0 1px rgba(0,0,0,0.4), 0 4px 16px rgba(0,0,0,0.4);
-  background-repeat: no-repeat;
-}
 
 /* --- Progress Indicator --- */
 .progress-indicator {
