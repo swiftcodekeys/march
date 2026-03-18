@@ -8,7 +8,7 @@ const INSIGHT_POOL = [
     sourceQ: 'q1',
     trigger: (a) => asArray(a.q1).includes('pool_safety'),
     title: 'Consider pool-code spacing',
-    text: 'Pool fences must meet strict spacing requirements. Ultra Aluminum panels with flush-bottom rails and narrow picket gaps are designed to satisfy most local pool barrier codes.',
+    text: 'Pool fences must meet strict spacing requirements. Our panels with flush-bottom rails and narrow picket gaps are designed to satisfy most local pool barrier codes.',
   },
   {
     sourceQ: 'q1',
@@ -20,13 +20,13 @@ const INSIGHT_POOL = [
     sourceQ: 'q4',
     trigger: (a) => asArray(a.q4).includes('coastal'),
     title: 'Aluminum thrives in coastal environments',
-    text: 'Unlike iron or steel, aluminum won\u2019t rust in salt air. Ultra\u2019s powder-coated finish adds an extra layer of corrosion resistance\u200a\u2014\u200aideal for waterfront properties.',
+    text: 'Unlike iron or steel, aluminum won\u2019t rust in salt air. Our ProCoat powder-coated finish adds an extra layer of corrosion resistance\u200a\u2014\u200aideal for waterfront properties.',
   },
   {
     sourceQ: 'q4',
     trigger: (a) => asArray(a.q4).includes('sloped'),
     title: 'Rackable panels follow your terrain',
-    text: 'Ultra Aluminum panels are engineered to rack (angle) up to 36 inches over an 8-foot section, following slopes without unsightly gaps at the bottom.',
+    text: 'Our panels are engineered to rack (angle) up to 36 inches over an 8-foot section, following slopes without unsightly gaps at the bottom.',
   },
   {
     sourceQ: 'q4',
@@ -80,13 +80,13 @@ const INSIGHT_POOL = [
     sourceQ: 'q3',
     trigger: (a) => a.q3 === 'commercial' || a.q3 === 'industrial_gov',
     title: 'Commercial-grade systems available',
-    text: 'Ultra\u2019s Pro Spacing and Vanguard lines are engineered for commercial and government projects\u200a\u2014\u200atighter picket spacing, heavier wall thickness, and crash-rated options.',
+    text: 'Our Pro Spacing and Vanguard lines are engineered for commercial and government projects\u200a\u2014\u200atighter picket spacing, heavier wall thickness, and crash-rated options.',
   },
   {
     sourceQ: 'q1',
     trigger: (a) => asArray(a.q1).includes('hoa_code'),
     title: 'HOA-friendly options',
-    text: 'Aluminum fencing is one of the most commonly HOA-approved materials. Ultra offers classic styles and neutral colors that satisfy even the strictest architectural review boards.',
+    text: 'Aluminum fencing is one of the most commonly HOA-approved materials. Grandview offers classic styles and neutral colors that satisfy even the strictest architectural review boards.',
   },
 ];
 
@@ -98,7 +98,7 @@ const GENERIC_INSIGHTS = [
   },
   {
     title: 'Lifetime warranty included',
-    text: 'Ultra Aluminum products come with a limited lifetime warranty on materials and finish\u200a\u2014\u200agiving you peace of mind for decades.',
+    text: 'Grandview Fence systems come with a limited lifetime warranty on materials and finish\u200a\u2014\u200agiving you peace of mind for decades.',
   },
 ];
 

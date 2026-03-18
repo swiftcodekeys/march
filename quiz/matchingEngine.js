@@ -53,7 +53,7 @@ const PRO_VARIANTS = {
 
 // ── matchSystem ──────────────────────────────────────────────────────
 /**
- * Determine the best-fit Ultra Aluminum product based on quiz answers.
+ * Determine the best-fit Grandview Fence product based on quiz answers.
  * @param {Object} answers — quiz answers keyed by question id
  * @returns {Object} product object { id, name, series, subtitle }
  */

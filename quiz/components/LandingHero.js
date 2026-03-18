@@ -65,9 +65,11 @@ const styles = {
   },
   trust: {
     marginTop: 20,
-    fontSize: 13,
-    color: 'rgba(255,255,255,0.7)',
+    fontSize: 15,
+    fontWeight: 500,
+    color: 'rgba(24,42,60,0.6)',
     fontFamily: FONTS.inter,
+    letterSpacing: 0.5,
   },
 };
 
@@ -137,7 +139,7 @@ export default function LandingHero({ onStart }) {
             <polyline points="9 18 15 12 9 6" />
           </svg>
         </button>
-        <p style={styles.trust}>Free &middot; 3 minutes &middot; Instant results</p>
+        <p style={styles.trust}>&#10003; Free &nbsp;&nbsp; &#10003; 3 minutes &nbsp;&nbsp; &#10003; Instant results</p>
       </div>
     </div>
   );

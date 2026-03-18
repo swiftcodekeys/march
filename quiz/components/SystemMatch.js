@@ -121,20 +121,23 @@ export default function SystemMatch({ system, onRetake }) {
         flexWrap: 'wrap',
       }}>
         <div style={{
-          width: isMobile ? '100%' : 320,
-          height: isMobile ? 200 : 220,
+          width: isMobile ? '100%' : 360,
+          height: isMobile ? 220 : 260,
           flexShrink: 0,
           borderRadius: 14,
           overflow: 'hidden',
           background: '#f5f7fa',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
         }}>
           <img
             src={getFenceImage(system.id)}
             alt={system.name + ' aluminum fence'}
             style={{
-              width: '100%',
-              height: '100%',
-              objectFit: 'cover',
+              maxWidth: '100%',
+              maxHeight: '100%',
+              objectFit: 'contain',
             }}
           />
         </div>
