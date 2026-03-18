@@ -154,7 +154,7 @@ var DesignStudio = function() {
             <div className="viewport-wrap">
                 <UnifiedCanvas config={config} panelCollapsed={panelCollapsed} />
                 {!panelCollapsed && <SocialProof />}
-                <BacklinksFooter panelCollapsed={panelCollapsed} />
+                <BacklinksFooter />
                 <FloatingPanel
                     activeTab={activeConfigTab}
                     onTabChange={setActiveConfigTab}

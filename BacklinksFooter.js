@@ -19,10 +19,9 @@ const LINKS = [
     { label: 'About',         href: 'https://grandviewfence.com/about' },
 ];
 
-const BacklinksFooter = (props) => {
-    var cls = 'backlinks' + (props.panelCollapsed ? ' backlinks-full' : '');
+const BacklinksFooter = () => {
     return (
-        <div className={cls}>
+        <div className="backlinks">
             {LINKS.map((link, i) => (
                 <React.Fragment key={link.label}>
                     <a href={link.href} target="_blank" rel="noopener">{link.label}</a>

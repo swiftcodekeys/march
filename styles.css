@@ -238,7 +238,7 @@ html, body {
   position: absolute;
   right: 20px;
   top: 16px;
-  bottom: 56px;
+  max-height: calc(100% - 72px);
   width: 370px;
   background: var(--panel);
   backdrop-filter: blur(20px);
@@ -1024,7 +1024,7 @@ html, body {
   position: absolute;
   bottom: 0;
   left: 0;
-  right: 398px;
+  right: 0;
   display: flex;
   justify-content: center;
   gap: 8px;
@@ -1035,10 +1035,6 @@ html, body {
   white-space: nowrap;
   overflow-x: auto;
   z-index: 10;
-  transition: right 0.35s cubic-bezier(0.22,1,0.36,1);
-}
-.backlinks.backlinks-full {
-  right: 0;
 }
 .backlinks a {
   color: var(--text-primary);
