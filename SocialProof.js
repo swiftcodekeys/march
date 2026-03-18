@@ -21,7 +21,7 @@ var SocialProof = function() {
     useEffect(function() {
         var timer = setInterval(function() {
             setIndex(function(prev) { return (prev + 1) % MESSAGES.length; });
-        }, 5000);
+        }, 15000);
         return function() { clearInterval(timer); };
     }, []);
 
