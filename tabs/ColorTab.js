@@ -1,27 +1,16 @@
 import React, { useState } from 'react';
 import { COLORS } from '../configData';
+import ImagePopup from './ImagePopup';
 
-var ColorPopup = function(props) {
-    var hex = props.hex;
-    var name = props.name;
-    var position = props.position;
-
-    if (!hex || !position) return null;
-
-    return (
-        <div className="img-popup" style={{ top: position.top, left: position.left, padding: '16px', textAlign: 'center' }}>
-            <div style={{
-                width: 80,
-                height: 80,
-                borderRadius: '50%',
-                background: hex,
-                margin: '0 auto 8px',
-                border: '2px solid rgba(0,0,0,0.1)',
-                boxShadow: '0 4px 12px rgba(0,0,0,0.12)',
-            }} />
-            <div className="img-popup-label">{name}</div>
-        </div>
-    );
+var COLOR_PREVIEWS = {
+    0: 'assets/ifence_previews/gate_colors/matte_sandstone.png',
+    1: 'assets/ifence_previews/gate_colors/bronze.png',
+    2: 'assets/ifence_previews/gate_colors/bronze.png',
+    3: 'assets/ifence_previews/gate_colors/white.png',
+    4: 'assets/ifence_previews/gate_colors/white.png',
+    5: 'assets/ifence_previews/gate_colors/black.png',
+    6: 'assets/ifence_previews/gate_colors/matte_black.png',
+    7: 'assets/ifence_previews/gate_colors/white.png',
 };
 
 var ColorTab = function(props) {
@@ -36,14 +25,16 @@ var ColorTab = function(props) {
         onConfigChange({ ...config, color: color });
     };
 
-    var handleMouseEnter = function(hex, name, event) {
+    var handleMouseEnter = function(colorId, name, event) {
         var rect = event.currentTarget.getBoundingClientRect();
+        var src = COLOR_PREVIEWS[colorId];
+        if (!src) return;
         setPopup({
-            hex: hex,
+            src: src,
             name: name,
             position: {
                 top: rect.top - 10,
-                left: rect.left - 160,
+                left: rect.left - 220,
             }
         });
     };
@@ -63,7 +54,7 @@ var ColorTab = function(props) {
                             key={color.id}
                             className="swatch-group"
                             onClick={function() { handleColorChange(color); }}
-                            onMouseEnter={function(e) { handleMouseEnter(color.hex, color.displayName, e); }}
+                            onMouseEnter={function(e) { handleMouseEnter(color.id, color.displayName, e); }}
                             onMouseLeave={handleMouseLeave}
                         >
                             <div
@@ -81,7 +72,7 @@ var ColorTab = function(props) {
             <div style={{ textAlign: 'center', marginTop: '16px', fontSize: '12px', color: '#8e95a0', fontWeight: 500 }}>
                 Every component individually coated before assembly for complete coverage. Limited Lifetime Warranty.
             </div>
-            {popup && <ColorPopup hex={popup.hex} name={popup.name} position={popup.position} />}
+            {popup && <ImagePopup src={popup.src} label={popup.name} position={popup.position} />}
         </div>
     );
 };

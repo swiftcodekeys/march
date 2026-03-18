@@ -3,16 +3,16 @@ import { STYLE_FEATURE_GATE } from '../configData';
 import ImagePopup from './ImagePopup';
 
 var PUPPY_VARIANTS = [
-    { id: 'std', name: 'Standard', thumb: 'gate_tool/th/th_pup_std.jpg' },
-    { id: 'fls', name: 'Flush',    thumb: 'gate_tool/th/th_pup_fls.jpg' },
-    { id: 'plg', name: 'Plug',     thumb: 'gate_tool/th/th_pup_plg.jpg' },
-    { id: 'pls', name: 'Plug Spear', thumb: 'gate_tool/th/th_pup_pls.jpg' },
-    { id: 'qua', name: 'Quad',     thumb: 'gate_tool/th/th_pup_qua.jpg' },
-    { id: 'qus', name: 'Quad Spear', thumb: 'gate_tool/th/th_pup_qus.jpg' },
-    { id: 'spe', name: 'Spear',    thumb: 'gate_tool/th/th_pup_spe.jpg' },
-    { id: 'sps', name: 'Spear Spear', thumb: 'gate_tool/th/th_pup_sps.jpg' },
-    { id: 'tri', name: 'Trident',  thumb: 'gate_tool/th/th_pup_tri.jpg' },
-    { id: 'trs', name: 'Trident Spear', thumb: 'gate_tool/th/th_pup_trs.jpg' },
+    { id: 'std', name: 'Classic',   thumb: 'assets/ifence_previews/gate_puppy_pickets/classic_puppies_100.png' },
+    { id: 'fls', name: 'Flush',     thumb: 'assets/ifence_previews/gate_puppy_pickets/flush_puppies_97.png' },
+    { id: 'plg', name: 'Nouveau',   thumb: 'assets/ifence_previews/gate_puppy_pickets/nouveau_puppies_94.png' },
+    { id: 'pls', name: 'Nouveau Staggered', thumb: 'assets/ifence_previews/gate_puppy_pickets/nouveau_puppies_staggered_91.png' },
+    { id: 'qua', name: 'Excelsior', thumb: 'assets/ifence_previews/gate_puppy_pickets/excelsior_puppies_88.png' },
+    { id: 'qus', name: 'Excelsior Staggered', thumb: 'assets/ifence_previews/gate_puppy_pickets/excelsior_puppies_staggered_85.png' },
+    { id: 'spe', name: 'Bella',     thumb: 'assets/ifence_previews/gate_puppy_pickets/bella_puppies_82.png' },
+    { id: 'sps', name: 'Bella Staggered', thumb: 'assets/ifence_previews/gate_puppy_pickets/bella_puppies_staggered_79.png' },
+    { id: 'tri', name: 'Fleur de Lis', thumb: 'assets/ifence_previews/gate_puppy_pickets/fleur_de_lis_puppies_76.png' },
+    { id: 'trs', name: 'Fleur de Lis Staggered', thumb: 'assets/ifence_previews/gate_puppy_pickets/fleur_de_lis_puppies_staggered_73.png' },
 ];
 
 var PuppyPicketsTab = function(props) {

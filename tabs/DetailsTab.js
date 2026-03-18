@@ -3,21 +3,21 @@ import { STYLE_FEATURE_GATE, FENCE_STYLES } from '../configData';
 import ImagePopup from './ImagePopup';
 
 var POST_CAP_ITEMS = [
-    { id: 'pcf', name: 'Flat', thumb: 'gate_tool/th/th_pstcp_flat.jpg' },
-    { id: 'pcb', name: 'Ball', thumb: 'gate_tool/th/th_pstcp_ball.jpg' },
+    { id: 'pcf', name: 'Flat', thumb: 'assets/ifence_previews/post_caps/flat_cap_71.png' },
+    { id: 'pcb', name: 'Ball', thumb: 'assets/ifence_previews/gate_accent_choices/ball_caps_160.png' },
 ];
 
 var FINIAL_ITEMS = [
-    { id: 'fs', name: 'Spear',   thumb: 'gate_tool/th/th_pc_spe.jpg' },
-    { id: 'ft', name: 'Trident', thumb: 'gate_tool/th/th_pc_tri.jpg' },
-    { id: 'fq', name: 'Quad',    thumb: 'gate_tool/th/th_pc_qua.jpg' },
-    { id: 'fp', name: 'Plug',    thumb: 'gate_tool/th/th_pc_plg.jpg' },
+    { id: 'fs', name: 'Spear',   thumb: 'assets/ifence_previews/gate_feature_options/concave_spear_109.png' },
+    { id: 'ft', name: 'Trident', thumb: 'assets/ifence_previews/gate_feature_options/convex_spear_106.png' },
+    { id: 'fq', name: 'Quad',    thumb: 'assets/ifence_previews/gate_feature_options/staggered_spear_67.png' },
+    { id: 'fp', name: 'Plug',    thumb: 'assets/ifence_previews/post_caps/flat_cap_71.png' },
 ];
 
 var ACCENT_ITEMS = [
-    { id: 'tcr', name: 'Circle',    thumb: 'gate_tool/th/th_acc_cir.jpg' },
-    { id: 'tbu', name: 'Butterfly', thumb: 'gate_tool/th/th_acc_but.jpg' },
-    { id: 'scr', name: 'Scroll',    thumb: 'gate_tool/th/th_acc_scr.jpg' },
+    { id: 'tcr', name: 'Circle',    thumb: 'assets/ifence_previews/gate_accent_choices/circles_at_base_151.png' },
+    { id: 'tbu', name: 'Butterfly', thumb: 'assets/ifence_previews/gate_accent_choices/butterflies_at_base_154.png' },
+    { id: 'scr', name: 'Scroll',    thumb: 'assets/ifence_previews/gate_accent_choices/estate_scrolls_136.png' },
 ];
 
 var DetailsTab = function(props) {

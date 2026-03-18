@@ -12,13 +12,13 @@ var STYLE_BADGES = {
 };
 
 var STYLE_THUMBS = {
-    uaf_200: 'gate_tool/th/th_st_uaf_200.jpg',
-    uaf_201: 'gate_tool/th/th_st_uaf_201.jpg',
-    uaf_250: 'gate_tool/th/th_st_uaf_250.jpg',
-    uab_200: 'gate_tool/th/th_st_uab_200.jpg',
-    uas_100: 'gate_tool/th/th_st_uas_100.jpg',
-    uas_101: 'gate_tool/th/th_st_uas_101.jpg',
-    uas_150: 'gate_tool/th/th_st_uas_150.jpg',
+    uaf_200: 'assets/ifence_previews/gate_styles/san_marino_15.png',
+    uaf_201: 'assets/ifence_previews/gate_styles/santa_monica_9.png',
+    uaf_250: 'assets/ifence_previews/gate_styles/sanibel_12.png',
+    uab_200: 'assets/ifence_previews/gate_styles/boca_grande_45.png',
+    uas_100: 'assets/ifence_previews/gate_styles/bella_vista_48.png',
+    uas_101: 'assets/ifence_previews/gate_styles/bella_vista_48.png',
+    uas_150: 'assets/ifence_previews/gate_styles/bella_terra_51.png',
 };
 
 var StyleTab = function(props) {

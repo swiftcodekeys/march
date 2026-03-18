@@ -2,15 +2,17 @@ import React, { useState, useEffect } from 'react';
 
 var MESSAGES = [
     'Most chosen this month: <strong>Charleston</strong> in Satin Black',
-    'Trending now: <strong>Horizon</strong> in Bronze',
-    '<strong>Savannah</strong> is the #1 pick for curb appeal',
-    'Homeowners love <strong>Vanguard</strong> with Spear finials',
-    'Most popular color this spring: <strong>Satin Bronze</strong>',
     'Top seller for pool safety: <strong>Haven</strong> in Black',
     '<strong>Charleston Pro</strong> — best for pet owners',
     'Estate arch is the most requested upgrade',
-    'New this season: <strong>Beige</strong> is making a comeback',
-    'Over 500 gates configured this month',
+    'Veteran-owned &amp; American-supplied',
+    'Limited Lifetime Warranty on all panels',
+    'Pool code compliant in all 50 states',
+    'Aluminum won\u2019t rust, rot, or need repainting',
+    '<strong>ProCoat</strong> powder coat finish rated to AAMA 2604',
+    'Most popular pairing: <strong>Horizon</strong> + Ball Post Caps in Bronze',
+    'Contractors: call for volume pricing',
+    'Design your gate in under 2 minutes',
 ];
 
 var SocialProof = function() {
