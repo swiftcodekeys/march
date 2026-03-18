@@ -260,3 +260,7 @@ export var HAVEN_RAIL_T1 = [1,0,0,0, 0,1,0,0, 0,0,1,0, 0,1.419,0,1];
 //   UAF-201 no accent: tY + _12 + fsv - _7_5 = -0.610 + 0.3048 + 0 - 0.1905 = -0.4957
 // UAS-101 uses same Y as normal pickets (tY + _12 + fsv = lt.picketTop), no separate constant needed.
 export var PTRES_Y_UAF201 = [1,0,0,0, 0,1,0,0, 0,0,1,0, 0,-0.4957,0,1];
+
+// Flush bottom (res=true): bottom rail Y drops from 0.155 to 0.0508 (_2 in Ultra)
+// SPATIAL_TRUTH.json → rails → bottom_rail_bY → flush_bottom_res_true_or_pupfl: 0.0508
+export var RES_BOTTOM_RAIL_Y = [1,0,0,0, 0,1,0,0, 0,0,1,0, 0,0.0508,0,1];

@@ -22,6 +22,7 @@ import {
     FINIAL_POSITIONS, FINIAL_BASE_Y,
     PTRES_Y_UAF201,
     HAVEN_RAIL_T1,
+    RES_BOTTOM_RAIL_Y,
 } from './spatialConstants';
 import { getModelPath, FENCE_STYLES } from './configData';
 
@@ -222,7 +223,9 @@ GateRenderer.prototype.buildGate = function(config) {
     var railT1    = applyFsv(lt.railT1, fsv);        // full fsv
     var railB0    = applyFsv(lt.railB0, fsv / 2);    // half fsv — midpoint of T1 and B2
     var railB1    = lt.railB1;                        // NO fsv — bY + offset, fixed
-    var railB2    = lt.railB2;                        // NO fsv — bY = 0.155 always
+    var railB2Raw = lt.railB2;                          // NO fsv — bY = 0.155 always
+    var hasRes = config.accessories && config.accessories.res;
+    var railB2    = hasRes ? RES_BOTTOM_RAIL_Y : railB2Raw;  // res=true → bY = 0.0508
     var picketTop = applyFsv(lt.picketTop, fsv);      // full fsv
     var ptOddStagger = (lt.picketTopOddStagger) ? applyFsv(lt.picketTopOddStagger, fsv) : null;
 
