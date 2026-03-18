@@ -82,10 +82,9 @@ html, body {
   justify-content: center;
 }
 .topnav-logo img {
-  height: 90px;
+  height: 48px;
   width: auto;
   object-fit: contain;
-  filter: brightness(10);
 }
 .topnav-brand {
   display: flex;
@@ -338,7 +337,7 @@ html, body {
 
 /* Panel Footer */
 .panel-footer {
-  padding: 14px 20px;
+  padding: 14px 6px;
   border-top: 1px solid var(--border);
   display: flex;
   justify-content: space-between;
