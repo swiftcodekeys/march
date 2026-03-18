@@ -1,71 +1,53 @@
 #!/bin/bash
+#
+# This script is used to diagnose issues with the gate tool.
+# It starts a mitmproxy instance and opens the gate tool in a new browser window.
+# The HAR file can be used to analyze the network requests made by the gate tool.
+#
+# Usage: ./diagnose.sh
+#
+# The HAR file will be saved as "gate-tool.har".
 
-echo "=== Grandview Gate Tool Diagnostic ==="
-echo ""
+set -e
 
-# Check if we're in the right directory
-if [ ! -f "index.html" ]; then
-    echo "❌ ERROR: Run this script from the designstudioworkingmvp directory"
-    exit 1
+# The URL of the gate tool
+URL="http://localhost:8000/gate_tool/"
+
+# The name of the HAR file to create
+HAR_FILE="gate-tool.har"
+
+# The command to start the browser
+# This will vary depending on your operating system
+if [[ "$OSTYPE" == "linux-gnu"* ]]; then
+  BROWSER_CMD="xdg-open"
+elif [[ "$OSTYPE" == "darwin"* ]]; then
+  BROWSER_CMD="open"
+elif [[ "$OSTYPE" == "cygwin" || "$OSTYPE" == "msys" || "$OSTYPE" == "win32" ]]; then
+  BROWSER_CMD="start"
+else
+  echo "Unsupported OS: $OSTYPE"
+  exit 1
 fi
 
-echo "✓ Found index.html"
+# Start mitmproxy in the background
+# The --set har_dump_file option will cause mitmproxy to write a HAR file
+# when it is shut down.
+echo "Starting mitmproxy..."
+mitmweb --set har_dump_file="$HAR_FILE" &
+MITM_PID=$!
 
-# Check for required files
-echo ""
-echo "Checking required files..."
+# Wait for mitmproxy to start
+sleep 3
 
-files=(
-    "gate_tool/index.html"
-    "gate_tool/js/ultra_dsg_min.js"
-    "gate_tool/js/three.min_086.js"
-    "catalog.json"
-)
+# Open the browser
+echo "Opening browser..."
+$BROWSER_CMD "$URL"
 
-for file in "${files[@]}"; do
-    if [ -f "$file" ]; then
-        echo "  ✓ $file"
-    else
-        echo "  ❌ MISSING: $file"
-    fi
-done
+# Wait for the user to press Enter
+read -p "Press Enter to shut down mitmproxy and save the HAR file..."
 
-# Check for model directories
-echo ""
-echo "Checking 3D model directories..."
+# Shut down mitmproxy
+echo "Shutting down mitmproxy..."
+kill $MITM_PID
 
-for dir in 0 1 2 3; do
-    if [ -d "gate_tool/m/$dir" ]; then
-        count=$(find "gate_tool/m/$dir" -name "*.json" | wc -l)
-        echo "  ✓ gate_tool/m/$dir/ ($count JSON files)"
-    else
-        echo "  ❌ MISSING: gate_tool/m/$dir/"
-    fi
-done
-
-# Check catalog.json for gate styles
-echo ""
-echo "Checking catalog.json gate styles..."
-if command -v python3 &> /dev/null; then
-    python3 -c "
-import json
-with open('catalog.json') as f:
-    data = json.load(f)
-    if 'gate_styles' in data:
-        print('  ✓ Found', len(data['gate_styles']), 'gate styles:')
-        for style in data['gate_styles']:
-            print('    -', style['code'], ':', style['label'])
-    else:
-        print('  ❌ No gate_styles found in catalog.json')
-" 2>/dev/null || echo "  ⚠ Python3 not available, skipping JSON check"
-fi
-
-echo ""
-echo "=== Diagnostic Complete ==="
-echo ""
-echo "To test the gate tool:"
-echo "1. Start a local server: python3 -m http.server 8080"
-echo "2. Open: http://localhost:8080"
-echo "3. Select 'Gate' from the Scene dropdown"
-echo "4. Open browser DevTools (F12) and check Console for errors"
-echo ""
+echo "HAR file saved to $HAR_FILE"
