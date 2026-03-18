@@ -2,10 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import UnifiedCanvas from './UnifiedCanvas';
 import TopNav from './TopNav';
-import BottomStrip from './BottomStrip';
-import FlyoutPanel from './FlyoutPanel';
+import FloatingPanel from './FloatingPanel';
 import BacklinksFooter from './BacklinksFooter';
-import ProgressIndicator from './ProgressIndicator';
 import SocialProof from './SocialProof';
 import { COLORS, FENCE_STYLES } from './configData';
 import QuizPage from './quiz/QuizPage';
@@ -122,6 +120,19 @@ var DesignStudio = function() {
     var activeConfigTab = configTabState[0];
     var setActiveConfigTab = configTabState[1];
 
+    var panelState = useState(false);
+    var panelCollapsed = panelState[0];
+    var setPanelCollapsed = panelState[1];
+
+    var handleReset = function() {
+        setConfig(defaultConfig);
+        setActiveConfigTab('style');
+    };
+
+    var handleSaveImage = function() {
+        alert('Save Image coming soon');
+    };
+
     // Auto-save to localStorage and update URL hash on config change
     useEffect(function() {
         try {
@@ -135,15 +146,20 @@ var DesignStudio = function() {
 
     return (
         <div className="app-shell">
-            <TopNav activeScene={activeTab} onSceneChange={setActiveTab} />
+            <TopNav activeScene={activeTab} onSceneChange={setActiveTab} onReset={handleReset} onSaveImage={handleSaveImage} />
             <div className="viewport-wrap">
                 <UnifiedCanvas config={config} />
-                <ProgressIndicator config={config} />
                 <SocialProof />
+                <BacklinksFooter />
+                <FloatingPanel
+                    activeTab={activeConfigTab}
+                    onTabChange={setActiveConfigTab}
+                    config={config}
+                    onConfigChange={setConfig}
+                    collapsed={panelCollapsed}
+                    onToggleCollapse={function() { setPanelCollapsed(!panelCollapsed); }}
+                />
             </div>
-            <FlyoutPanel activeTab={activeConfigTab} config={config} onConfigChange={setConfig} />
-            <BottomStrip activeTab={activeConfigTab} onTabChange={setActiveConfigTab} />
-            <BacklinksFooter />
         </div>
     );
 };

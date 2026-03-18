@@ -1,13 +1,18 @@
 import React from 'react';
 
-const SCENES = [
+var SCENES = [
     { id: 'gates', label: 'Driveway Gates' },
     { id: 'fencing', label: 'Front Yard' },
     { id: 'backyard', label: 'Back Yard' },
     { id: 'draw', label: 'Draw Your Yard', badge: 'NEW' },
 ];
 
-const TopNav = ({ activeScene, onSceneChange }) => {
+var TopNav = function(props) {
+    var activeScene = props.activeScene;
+    var onSceneChange = props.onSceneChange;
+    var onReset = props.onReset;
+    var onSaveImage = props.onSaveImage;
+
     return (
         <nav className="topnav">
             <div className="topnav-left">
@@ -21,19 +26,23 @@ const TopNav = ({ activeScene, onSceneChange }) => {
             </div>
             <div className="topnav-divider"></div>
             <div className="topnav-center">
-                {SCENES.map(scene => (
-                    <button
-                        key={scene.id}
-                        className={'topnav-tab' + (activeScene === scene.id ? ' active' : '')}
-                        onClick={() => onSceneChange(scene.id)}
-                    >
-                        {scene.label}
-                        {scene.badge && <span className="badge">{scene.badge}</span>}
-                    </button>
-                ))}
+                {SCENES.map(function(scene) {
+                    return (
+                        <button
+                            key={scene.id}
+                            className={'topnav-tab' + (activeScene === scene.id ? ' active' : '')}
+                            onClick={function() { onSceneChange(scene.id); }}
+                        >
+                            {scene.label}
+                            {scene.badge && <span className="badge">{scene.badge}</span>}
+                        </button>
+                    );
+                })}
             </div>
             <div className="topnav-right">
-                <button className="btn-quote-nav">Get Instant Quote &rarr;</button>
+                <button className="nav-btn" onClick={onReset}>{'\u21BA'} Reset</button>
+                <button className="nav-btn" onClick={onSaveImage}>{'\uD83D\uDCF7'} Save</button>
+                <button className="btn-quote-nav" onClick={function() { /* TODO */ }}>Get Quote &rarr;</button>
             </div>
         </nav>
     );
