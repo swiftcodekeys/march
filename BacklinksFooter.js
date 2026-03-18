@@ -14,10 +14,9 @@ const LINKS = [
     { label: 'Haven',         href: 'https://grandviewfence.com/fencing/haven' },
     { label: 'Charleston',    href: 'https://grandviewfence.com/fencing/charleston' },
     { label: 'Savannah',      href: 'https://grandviewfence.com/fencing/savannah' },
-    { label: 'Get a Quote',   href: 'https://grandviewfence.com/quick-quote' },
+    { label: 'Pet-Safe',      href: 'https://grandviewfence.com/pet-aluminum-fence' },
     { label: 'Blog',          href: 'https://grandviewfence.com/blog' },
     { label: 'About',         href: 'https://grandviewfence.com/about' },
-    { label: 'Pet-Safe',      href: 'https://grandviewfence.com/pet-aluminum-fence' },
 ];
 
 const BacklinksFooter = (props) => {

@@ -41,7 +41,7 @@ var TopNav = function(props) {
             <div className="topnav-right">
                 <button className="nav-btn" onClick={onReset}>{'\u21BA'} Reset</button>
                 <button className="nav-btn" onClick={onSaveImage}>{'\uD83D\uDCF7'} Save</button>
-                <a className="btn-quote-nav" href="https://grandviewfence.com/pet-aluminum-fence" target="_blank" rel="noopener">Pet Safe &rarr;</a>
+                <button className="btn-quote-nav" onClick={function() { /* TODO */ }}>Get Quote &rarr;</button>
             </div>
         </nav>
     );
