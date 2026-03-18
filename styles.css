@@ -82,16 +82,27 @@ html, body {
   justify-content: center;
 }
 .topnav-logo img {
-  height: 80px;
+  height: 90px;
   width: auto;
   object-fit: contain;
   filter: brightness(10);
 }
-.topnav-title {
-  font-size: 15px;
+.topnav-brand {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+.brand-name {
+  font-size: 17px;
+  font-weight: 800;
+  color: #fff;
+  letter-spacing: -0.3px;
+}
+.brand-sub {
+  font-size: 9px;
   font-weight: 700;
-  color: rgba(255,255,255,0.85);
-  letter-spacing: 1px;
+  color: rgba(255,255,255,0.55);
+  letter-spacing: 2.5px;
   text-transform: uppercase;
 }
 .topnav-center {
@@ -131,7 +142,12 @@ html, body {
   vertical-align: middle;
 }
 
-/* Nav Buttons (Reset, Save Image, Get Quote) */
+.topnav-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+/* Nav Buttons (Reset, Save, Pet Safe) */
 .nav-btn {
   padding: 8px 16px;
   background: rgba(255,255,255,0.12);
@@ -165,7 +181,7 @@ html, body {
   box-shadow: 0 4px 16px var(--cta-glow);
 }
 
-/* Legacy Get Quote nav button */
+/* Pet Safe nav button */
 .btn-quote-nav {
   padding: 9px 20px;
   background: #fff;
@@ -177,6 +193,9 @@ html, body {
   cursor: pointer;
   transition: all 0.2s;
   font-family: inherit;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
   box-shadow: 0 1px 4px rgba(0,0,0,0.1);
 }
 .btn-quote-nav:hover {
@@ -1005,9 +1024,11 @@ html, body {
   justify-content: center;
   gap: 8px;
   padding: 12px 24px;
-  background: linear-gradient(0deg, rgba(255,255,255,0.75) 0%, transparent 100%);
+  background: linear-gradient(0deg, rgba(255,255,255,0.85) 0%, transparent 100%);
   font-size: 13px;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
+  white-space: nowrap;
+  overflow-x: auto;
   z-index: 10;
   transition: right 0.35s cubic-bezier(0.22,1,0.36,1);
 }
@@ -1015,7 +1036,7 @@ html, body {
   right: 0;
 }
 .backlinks a {
-  color: var(--text-secondary);
+  color: var(--text-primary);
   text-decoration: none;
   font-weight: 600;
   padding: 2px 6px;

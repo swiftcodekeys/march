@@ -19,7 +19,10 @@ var TopNav = function(props) {
                 <div className="topnav-logo">
                     <img src="assets/logo.png" alt="Grandview" />
                 </div>
-                <span className="topnav-title">Design Studio</span>
+                <div className="topnav-brand">
+                    <span className="brand-name">Grandview Fence</span>
+                    <span className="brand-sub">Design Studio</span>
+                </div>
             </div>
             <div className="topnav-center">
                 {SCENES.map(function(scene) {
@@ -38,7 +41,7 @@ var TopNav = function(props) {
             <div className="topnav-right">
                 <button className="nav-btn" onClick={onReset}>{'\u21BA'} Reset</button>
                 <button className="nav-btn" onClick={onSaveImage}>{'\uD83D\uDCF7'} Save</button>
-                <button className="btn-quote-nav" onClick={function() { /* TODO */ }}>Get Quote &rarr;</button>
+                <a className="btn-quote-nav" href="https://grandviewfence.com/pet-aluminum-fence" target="_blank" rel="noopener">Pet Safe &rarr;</a>
             </div>
         </nav>
     );
