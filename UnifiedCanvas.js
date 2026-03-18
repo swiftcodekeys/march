@@ -66,8 +66,11 @@ var OverlayPlaceholder = function(props) {
 // ============================================================
 // UnifiedCanvas — routes to 3D / preview / overlay based on style
 // ============================================================
+var PANEL_WIDTH = 390; // 370px panel + 20px right margin
+
 var UnifiedCanvas = function(props) {
     var config = props.config;
+    var panelCollapsed = props.panelCollapsed;
     var renderMode = getStyleRenderMode(config.styleId);
     var activeStyle = FENCE_STYLES.find(function(s) { return s.id === config.styleId; });
     var styleName = activeStyle ? activeStyle.name : '';
@@ -91,22 +94,25 @@ var UnifiedCanvas = function(props) {
         var mount = mountRef.current;
         if (!outer || !wrapper || !mount) return;
 
-        var box = fitContainBox(outer.clientWidth, outer.clientHeight);
-        wrapper.style.width = box.w + 'px';
-        wrapper.style.height = box.h + 'px';
-        wrapper.style.left = box.left + 'px';
-        wrapper.style.top = box.top + 'px';
+        var positionCanvas = function(totalW, totalH, collapsed) {
+            var availW = collapsed ? totalW : totalW - PANEL_WIDTH;
+            var box = fitContainBox(availW, totalH);
+            wrapper.style.width = box.w + 'px';
+            wrapper.style.height = box.h + 'px';
+            wrapper.style.left = box.left + 'px';
+            wrapper.style.top = box.top + 'px';
+            wrapper.style.transition = 'left 0.35s cubic-bezier(0.22,1,0.36,1), width 0.35s cubic-bezier(0.22,1,0.36,1)';
+            return box;
+        };
+
+        var box = positionCanvas(outer.clientWidth, outer.clientHeight, panelCollapsed);
 
         var gr = new GateRenderer(mount);
         gr.resize(box.w, box.h);
         rendererRef.current = gr;
 
         var handleResize = function() {
-            var b = fitContainBox(outer.clientWidth, outer.clientHeight);
-            wrapper.style.width = b.w + 'px';
-            wrapper.style.height = b.h + 'px';
-            wrapper.style.left = b.left + 'px';
-            wrapper.style.top = b.top + 'px';
+            var b = positionCanvas(outer.clientWidth, outer.clientHeight, panelCollapsed);
             gr.resize(b.w, b.h);
         };
         window.addEventListener('resize', handleResize);
@@ -117,6 +123,25 @@ var UnifiedCanvas = function(props) {
             rendererRef.current = null;
         };
     }, [renderMode]);
+
+    // ============================================================
+    // REPOSITION — when panel collapses/expands
+    // ============================================================
+    useEffect(function() {
+        if (renderMode !== '3d') return;
+        var outer = outerRef.current;
+        var wrapper = wrapperRef.current;
+        var gr = rendererRef.current;
+        if (!outer || !wrapper || !gr) return;
+
+        var availW = panelCollapsed ? outer.clientWidth : outer.clientWidth - PANEL_WIDTH;
+        var box = fitContainBox(availW, outer.clientHeight);
+        wrapper.style.width = box.w + 'px';
+        wrapper.style.height = box.h + 'px';
+        wrapper.style.left = box.left + 'px';
+        wrapper.style.top = box.top + 'px';
+        gr.resize(box.w, box.h);
+    }, [panelCollapsed, renderMode]);
 
     // ============================================================
     // GATE ASSEMBLY — fast path for color-only changes
