@@ -81,13 +81,6 @@ Branch: `feat/fence-quiz`
 
 ## What's Done
 
-### UI Redesign — COMPLETE
-- Light-theme floating panel over full-screen viewport
-- 7 tabs with step indicators, progress dots, Next/Back
-- iFence-style image hover popups on colors, post caps, finials, puppy pickets
-- Reset + Save Image in nav, panel collapse/expand
-- All verified with Playwright
-
 ### Renderer Features — COMPLETE
 - **Flush bottom (res):** Y=0.155 → Y=0.0508 when res=true (verified vs Ultra `_2=0.0508`)
 - **Mount type:** Direct mount hides posts/hinges/caps
@@ -95,8 +88,33 @@ Branch: `feat/fence-quiz`
 - **Circle/butterfly accents:** Position arrays from Ultra, ACCENT_BASE_Y=1.397 matches Ultra group posY
 - **Finials:** Exact XYZ arrays from Ultra per style/leaf/arch
 - **Pro spacing:** Res pickets visible only for UAF-201/UAS-101
-- **Height clipping:** 48/60/72" via clipping planes
+- **Height clipping:** 48/60/72" via clipping planes (hardcoded constants, NOT dynamic)
 - **HDR environment map + bump map:** Per-color envMapIntensity from Ultra scrape
+
+### Renderer Fixes (2026-03-18)
+- Reverted broken dynamic height math — restored verified CLIP_POST/CLIP_PO23 constants
+- Fixed style change resetting color to black (stale closure in StyleTab)
+- Fixed finial/postCap not persisting in URL hash (spear styles survive refresh)
+
+### UI Redesign — COMPLETE (2026-03-18)
+- Light-theme floating panel over full-screen viewport, capped max-height
+- 7 tabs with step indicators, progress dots, Next/Back + "Complete your design" hint
+- Viewport shifts left when panel open, centers when collapsed
+- New nav bar (64px): logo icon + "GRANDVIEW Fence" (Fence in sky blue) + "Design Studio"
+- White transparent logo (`assets/logo-white.png`)
+- Centered nav tabs with sky blue underline, scaled-up elements
+- Next button: white default, orange hover, blue text matching Get Quote
+- Backlinks blur always full width, darker text (--text-primary), single line
+- New driveway background image (`assets/backgrounds/GateBackground.jpg`)
+- Scene vertically centered in viewport
+- Social proof pill: 12 rotating trust signals every 15 seconds (veteran-owned, AAMA 2604, pool code, warranty, etc.)
+- All UI separators use `|` pipes (no em dashes)
+
+### iFence Image Scrape — COMPLETE (2026-03-18)
+- Scraped 99 preview images from ifenceusa.com into `assets/ifence_previews/`
+- Swapped all thumbnails: StyleTab, ColorTab, DetailsTab, PuppyPicketsTab
+- Charleston Pro: custom image with zoom/crop/contrast CSS
+- Style mappings: San Marino=Horizon, Santa Monica=Horizon Pro, Sanibel=Vanguard, Boca Grande=Haven, Bella Vista=Charleston, Bella Terra=Savannah
 
 ---
 
@@ -109,7 +127,14 @@ Branch: `feat/fence-quiz`
    - UAF-201: Y = tY + 0.3048 + fsv - 0.1905 = -0.4957
    - UAS-101: Y = tY + 0.3048 + fsv = lt.picketTop
 
-### Priority 2: Puppy Picket Refinement
+### Priority 2: UI Bugs & Polish
+- **Color hover popup not working** — ImagePopup wired in ColorTab but not rendering on hover. Debug positioning/triggering.
+- Wire iFence images into OptionsTab (arch types, leaf config, feature options)
+- Style card hover-to-enlarge popups (like iFence does)
+- Dynamic height support (48"/72") — isolated commit with Ultra verification
+- Camera alignment with new background photo
+
+### Priority 3: Puppy Picket Refinement
 Basic puppy works (rail + clip). Missing: puppy finials for classic variants.
 
 **Ultra's puppy behavior (from Playwright scrape):**
@@ -120,12 +145,20 @@ Basic puppy works (rail + clip). Missing: puppy finials for classic variants.
 - Puppy finial models: `m/3/{fp|fs|ft|fq}.json` (same as gate finials)
 - Position arrays: pf1/pf2 (classic), pf1s/pf2s (staggered)
 
-### Priority 3: Polish & Ship
+### Priority 4: Ship
 - PDF download (button exists, shows "coming soon" alert)
 - Loading states and transitions
 - Mobile responsiveness
 - Cross-browser testing
 - "Get Quote" form integration with grandviewfence.com
+
+### Phase 2 — Fence Tool
+- Front/back yard fence overlays (2D overlay system already works)
+- Fence-image mode (orthographic camera + user photo upload)
+
+### Phase 3 — Advanced
+- Google Maps property estimator
+- Live quote calculator
 
 ---
 
@@ -168,15 +201,22 @@ Basic puppy works (rail + clip). Missing: puppy finials for classic variants.
 
 ## Thumbnail Image Reference
 
-All in `gate_tool/th/`:
-- **Styles:** th_st_uaf_200.jpg through th_st_uas_150.jpg (7 styles)
-- **Puppy Pickets:** th_pup_std.jpg through th_pup_trs.jpg (10 variants)
-- **Post Caps:** th_pstcp_flat.jpg, th_pstcp_ball.jpg
-- **Finials:** th_pc_spe.jpg, th_pc_tri.jpg, th_pc_qua.jpg, th_pc_plg.jpg
-- **Mount/Leaf:** th_so_sngpl.jpg, th_so_sngpo.jpg, th_so_dblpl.jpg, th_so_dblpo.jpg
-- **Arch:** th_so_ares.jpg, th_so_arar.jpg, th_so_arrv.jpg, th_so_arst.jpg
-- **Accents:** th_acc_cir.jpg, th_acc_but.jpg, th_acc_scr.jpg, th_acc_bcr.jpg, th_acc_bbu.jpg
-- **Options:** th_ft_mdr.jpg, th_ft_res.jpg, th_ft_ufr.jpg
+### Active (iFence previews) — `assets/ifence_previews/`
+| Folder | Count | Used In |
+|--------|-------|---------|
+| `gate_styles/` | 18 + charleston_pro.png | StyleTab |
+| `gate_colors/` | 5 | ColorTab hover popups |
+| `post_caps/` | 2 | DetailsTab |
+| `gate_puppy_pickets/` | 10 | PuppyPicketsTab |
+| `gate_accent_choices/` | 8 | DetailsTab |
+| `gate_feature_options/` | 8 | DetailsTab (finials), OptionsTab (TODO) |
+| `gate_arch_types/` | 4 | OptionsTab (TODO) |
+| `gate_leaf_config/` | 4 | OptionsTab (TODO) |
+| `styles/` | 18 | Fence versions (Phase 2) |
+| `colors/` | 5 | Fence versions (Phase 2) |
+
+### Legacy (Ultra thumbnails) — `gate_tool/th/`
+Still available but no longer referenced in UI. Kept for reference.
 
 ---
 
