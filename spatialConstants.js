@@ -22,7 +22,7 @@ export function fitContainBox(cw, ch) {
     } else {
         w = cw; h = Math.round(cw / BG_ASPECT);
     }
-    return { w: w, h: h, left: Math.round((cw - w) / 2), top: ch - h };
+    return { w: w, h: h, left: Math.round((cw - w) / 2), top: Math.round((ch - h) / 2) };
 }
 
 // ---- GROUND TRUTH MATRICES (from matrixWorld.elements) ----
