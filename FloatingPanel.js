@@ -160,7 +160,7 @@ var FloatingPanel = function(props) {
     return (
         <div>
             <button
-                className="collapse-handle"
+                className={'collapse-handle' + (collapsed ? ' panel-hidden' : '')}
                 onClick={onToggleCollapse}
                 title={collapsed ? 'Expand panel' : 'Collapse panel'}
             >

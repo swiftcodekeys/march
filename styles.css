@@ -253,6 +253,17 @@ html, body {
   overflow: hidden;
   z-index: 50;
   animation: slideInPanel 0.45s cubic-bezier(0.22,1,0.36,1);
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.float-panel.collapsed {
+  transform: translateX(calc(100% + 40px));
+  pointer-events: none;
+}
+.float-panel.collapsed .panel-tabs,
+.float-panel.collapsed .panel-header,
+.float-panel.collapsed .panel-body,
+.float-panel.collapsed .panel-footer {
+  opacity: 0;
 }
 @keyframes slideInPanel {
   from { opacity: 0; transform: translateX(30px); }
@@ -380,10 +391,9 @@ html, body {
 
 /* --- Style Cards (grid layout for existing tabs) --- */
 .style-grid {
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
   gap: 14px;
-  justify-content: center;
-  flex-wrap: wrap;
 }
 .style-card {
   width: 148px;
@@ -891,6 +901,13 @@ html, body {
   max-height: 200px;
   object-fit: contain;
 }
+.img-popup-label {
+  padding: 6px 8px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-primary);
+  text-align: center;
+}
 
 /* --- Viewport Overlays --- */
 .social-proof-pill {
@@ -942,6 +959,9 @@ html, body {
 .collapse-handle:hover {
   color: var(--text-secondary);
   background: rgba(255,255,255,0.95);
+}
+.collapse-handle.panel-hidden {
+  right: 20px;
 }
 
 /* Reset Button (viewport overlay) */
