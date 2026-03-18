@@ -82,7 +82,7 @@ html, body {
   justify-content: center;
 }
 .topnav-logo img {
-  height: 48px;
+  height: 54px;
   width: auto;
   object-fit: contain;
 }
@@ -92,7 +92,7 @@ html, body {
   gap: 1px;
 }
 .brand-name {
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 600;
   color: #fff;
   letter-spacing: 1.5px;
@@ -102,7 +102,7 @@ html, body {
   color: var(--brand);
 }
 .brand-sub {
-  font-size: 9px;
+  font-size: 10px;
   font-weight: 700;
   color: rgba(255,255,255,0.55);
   letter-spacing: 2.5px;
@@ -116,8 +116,8 @@ html, body {
   gap: 0;
 }
 .topnav-tab {
-  padding: 17px 18px;
-  font-size: 13px;
+  padding: 21px 20px;
+  font-size: 14px;
   font-weight: 600;
   color: rgba(255,255,255,0.6);
   border: none;
@@ -152,13 +152,13 @@ html, body {
 }
 /* Nav Buttons (Reset, Save, Pet Safe) */
 .nav-btn {
-  padding: 8px 16px;
+  padding: 10px 18px;
   background: rgba(255,255,255,0.12);
   color: rgba(255,255,255,0.8);
   border: 1px solid rgba(255,255,255,0.15);
   border-radius: 8px;
   font-weight: 600;
-  font-size: 12px;
+  font-size: 13px;
   cursor: pointer;
   transition: all 0.2s;
   font-family: inherit;
@@ -184,15 +184,15 @@ html, body {
   box-shadow: 0 4px 16px var(--cta-glow);
 }
 
-/* Pet Safe nav button */
+/* Get Quote nav button */
 .btn-quote-nav {
-  padding: 9px 20px;
+  padding: 10px 22px;
   background: #fff;
   color: var(--brand-dark);
   border: none;
   border-radius: 8px;
   font-weight: 700;
-  font-size: 13px;
+  font-size: 14px;
   cursor: pointer;
   transition: all 0.2s;
   font-family: inherit;
