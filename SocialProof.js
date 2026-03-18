@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 var MESSAGES = [
     'Most chosen this month: <strong>Charleston</strong> in Satin Black',
     'Top seller for pool safety: <strong>Haven</strong> in Black',
-    '<strong>Charleston Pro</strong> — best for pet owners',
+    '<strong>Charleston Pro</strong> | best for pet owners',
     'Estate arch is the most requested upgrade',
     'Veteran-owned &amp; American-supplied',
     'Limited Lifetime Warranty on all panels',

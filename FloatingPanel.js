@@ -40,7 +40,7 @@ function getHeader(activeTab, config) {
             return {
                 step: 'Step 1 of 7',
                 title: 'Choose Your Gate Style',
-                subtitle: style.name + ' — ' + style.subtitle,
+                subtitle: style.name + ' | ' + style.subtitle,
                 showProductLink: true,
                 linkLabel: 'View ' + style.name + ' Page',
                 linkUrl: STYLE_URLS[style.id] || 'https://grandviewfence.com/fencing',
@@ -49,7 +49,7 @@ function getHeader(activeTab, config) {
             return {
                 step: 'Step 2 of 7',
                 title: 'ProCoat Powder Coat Finish',
-                subtitle: colorName + ' — Premium Finish',
+                subtitle: colorName + ' | Premium Finish',
                 showProductLink: true,
                 linkLabel: 'All Finishes',
                 linkUrl: 'https://grandviewfence.com/accessories',
@@ -58,19 +58,19 @@ function getHeader(activeTab, config) {
             return {
                 step: 'Step 3 of 7',
                 title: 'Gate Dimensions',
-                subtitle: config.height + '" Height — ' + leafLabel,
+                subtitle: config.height + '" Height | ' + leafLabel,
             };
         case 'options':
             return {
                 step: 'Step 4 of 7',
                 title: 'Gate Options',
-                subtitle: 'Customize — Arch, Rails & More',
+                subtitle: 'Customize | Arch, Rails & More',
             };
         case 'puppyPickets':
             return {
                 step: 'Step 5 of 7',
                 title: 'Puppy Picket Styles',
-                subtitle: 'Keep Pets Safe — 10 Styles Available',
+                subtitle: 'Keep Pets Safe | 10 Styles Available',
                 showProductLink: true,
                 linkLabel: 'Pet-Safe Fencing',
                 linkUrl: 'https://grandviewfence.com/pet-aluminum-fence',
@@ -85,13 +85,13 @@ function getHeader(activeTab, config) {
             return {
                 step: 'Step 7 of 7',
                 title: 'Your Configuration',
-                subtitle: 'Ready to Order? — Get your instant quote',
+                subtitle: 'Ready to Order? | Get your instant quote',
             };
         default:
             return {
                 step: 'Step 1 of 7',
                 title: 'Choose Your Gate Style',
-                subtitle: style.name + ' — ' + style.subtitle,
+                subtitle: style.name + ' | ' + style.subtitle,
             };
     }
 }
