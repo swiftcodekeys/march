@@ -52,7 +52,7 @@ var StyleTab = function(props) {
                         onClick={function() { handleStyleChange(style.id); }}
                     >
                         <div className="style-card-img">
-                            <img src={STYLE_THUMBS[style.id]} alt={style.name} style={style.id === 'uas_101' ? { transform: 'scaleX(-1)' } : {}} />
+                            <img src={STYLE_THUMBS[style.id]} alt={style.name} />
                         </div>
                         <div className="style-card-info">
                             <div className="style-card-name">{style.name}</div>
