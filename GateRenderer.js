@@ -18,7 +18,7 @@ import {
     CLIP_POST, CLIP_PO23, CLIP_PT, CLIP_PB, HEIGHT_CLIP_OFFSET, POST_CLIP_72,
     CLIP_PB_PUPPY_STD, CLIP_PB_PUPPY_CLP,
     ACCENT_CIRCLE_BOTTOM_Y, ACCENT_BUTTERFLY_BOTTOM_Y,
-    ACCENT_POSITIONS, ACCENT_BASE_Y,
+    ACCENT_POSITIONS, ACCENT_BASE_Y, ACCENT_CIRCLE_RAIL_BUMP,
     FINIAL_POSITIONS, FINIAL_BASE_Y,
     PTRES_Y_UAF201,
     HAVEN_RAIL_T1,
@@ -396,7 +396,14 @@ GateRenderer.prototype.buildGate = function(config) {
     // TOP RAILS — per-leaf Y positions
     // Haven (UAB-200, gN==4): r1 rail sits at -0.07 offset (compressed top gap)
     // vs standard -0.1905 offset. SPATIAL_TRUTH.json → rails → r1_second_rail_y → haven_gN4
+    // When top circles (tcr) are active, Ultra bumps r1 UP by _2_5 (0.0635m) to close the
+    // gap between the rail and the bottom of the circle geometry.
+    // Ultra: if(tcr==true){ r1y = htY-_7_5+rH+fsv+_2_5; }
+    var hasTopCircles = config.accessories && config.accessories.tcr;
     var railT1Final = (styleDef && styleDef.code === 'UAB-200') ? offsetY(HAVEN_RAIL_T1, 0, hOff) : railT1;
+    if (hasTopCircles) {
+        railT1Final = offsetY(railT1Final, ACCENT_CIRCLE_RAIL_BUMP, 0);
+    }
     loader.load(getModelPath('railTop', config), function(geo) {
         [railT0, railT1Final].forEach(function(m) {
             var mesh = new THREE.Mesh(geo, makeMat());

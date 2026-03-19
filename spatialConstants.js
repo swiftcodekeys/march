@@ -211,6 +211,11 @@ export var ACCENT_BASE_Y = {
     butterfly: 1.363,
 };
 
+// When top circle accents are active, Ultra bumps the second rail UP by _2_5 (2.5" = 0.0635m)
+// to close the gap between the rail and the bottom of the circle geometry.
+// Ultra source: if(tcr==true){ r1y = htY-_7_5+rH+fsv+_2_5; }
+export var ACCENT_CIRCLE_RAIL_BUMP = 0.0635;
+
 // ---- FINIAL POSITIONS (exact XYZ from Ultra's global position arrays) ----
 // Ultra stores finial positions as 'x,y,z*x,y,z*...' strings keyed by
 // style prefix + leaf + arch:
