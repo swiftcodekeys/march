@@ -234,6 +234,18 @@ GateRenderer.prototype.buildGate = function(config) {
         return out;
     }
 
+    // ---- Puppy picket config (needed before rail calculations) ----
+    // Ultra puppy types and their rail Y / clip values:
+    //   pupst (std):  r3y = bY + _12 = 0.4598,  clip = r3y + 0.2 = 0.6598
+    //   pupfl (fls):  r3y = bY + _16 = 0.4572 (bY=_2=0.0508), clip = r3y + 0.2 = 0.6572
+    //   pupcl (plg/spe/tri/qua + staggered): r3y = bY + _7_5 = 0.3455, clip = _18+0.02 = 0.477
+    var hasPuppy = config.accessories && config.accessories.pup;
+    var pupId = hasPuppy ? config.accessories.pup : null;
+    var isClassicPuppy = pupId && ['plg','pls','spe','sps','tri','trs','qua','qus'].indexOf(pupId) !== -1;
+    var isFlushPuppy = (pupId === 'fls');
+    // Puppy rail Y position per type
+    var puppyRailY = isClassicPuppy ? 0.3455 : (isFlushPuppy ? 0.4572 : 0.4598);
+
     // Top rails: full fsv + full height offset
     var railT0    = offsetY(lt.railT0, fsv, hOff);
     var railT1    = offsetY(lt.railT1, fsv, hOff);
@@ -243,7 +255,8 @@ GateRenderer.prototype.buildGate = function(config) {
     var railB1    = lt.railB1;
     var railB2Raw = lt.railB2;
     var hasRes = config.accessories && config.accessories.res;
-    var railB2    = hasRes ? RES_BOTTOM_RAIL_Y : railB2Raw;
+    // Ultra: if(res==true || pupI=='pupfl'){ bY = _2; } — flush puppy also lowers bottom rail
+    var railB2    = (hasRes || isFlushPuppy) ? RES_BOTTOM_RAIL_Y : railB2Raw;
     // Picket tops: full fsv + full height offset
     var picketTop = offsetY(lt.picketTop, fsv, hOff);
     var ptOddStagger = (lt.picketTopOddStagger) ? offsetY(lt.picketTopOddStagger, fsv, hOff) : null;
@@ -256,16 +269,8 @@ GateRenderer.prototype.buildGate = function(config) {
         clips.post23.constant = (CLIP_PO23[archId] || CLIP_PO23.e) + hOff;
     }
 
-    // Puppy clip: tighten res picket bottom when puppy is active
-    // Ultra puppy types and their rail Y / clip values:
-    //   pupst (std):  r3y = bY + _12 = 0.4598,  clip = r3y + 0.2 = 0.6598
-    //   pupfl (fls):  r3y = bY + _16 = 0.4572 (bY=_2=0.0508), clip = r3y + 0.2 = 0.6572
-    //   pupcl (plg/spe/tri/qua + staggered): r3y = bY + _7_5 = 0.3455, clip = _18+0.02 = 0.477
-    var hasPuppy = config.accessories && config.accessories.pup;
-    var pupId = hasPuppy ? config.accessories.pup : null;
-    // Classic puppy variants (have finials on the short pickets)
-    var isClassicPuppy = pupId && ['plg','pls','spe','sps','tri','trs','qua','qus'].indexOf(pupId) !== -1;
-    var isFlushPuppy = (pupId === 'fls');
+    // Puppy clip plane: controls how tall the bottom extra pickets appear
+    // Ultra: cpY(pbxCp, r3y + 0.2) for std/flush, cpY(pbxCp, _18+0.02) for classic
     if (hasPuppy) {
         if (isClassicPuppy) {
             clips.pbRes.constant = CLIP_PB_PUPPY_CLP;  // 0.477
@@ -277,8 +282,6 @@ GateRenderer.prototype.buildGate = function(config) {
     } else {
         clips.pbRes.constant = CLIP_PB;
     }
-    // Puppy rail Y position per type (used below when loading rails)
-    var puppyRailY = isClassicPuppy ? 0.3455 : (isFlushPuppy ? 0.4572 : 0.4598);
 
     var color = config.color || { threeHex: 0x080808 };
 
