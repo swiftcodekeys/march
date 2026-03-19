@@ -469,13 +469,32 @@ GateRenderer.prototype.buildGate = function(config) {
     });
 
     // Res/extra pickets — visible only for Pro spacing (pi=201, pi=101).
-    // ptRes Y position differs per style (SPATIAL_TRUTH.json → picket_y_positions → grptx_y_by_style):
-    //   UAF-201: Y = tY + _12 + fsv - _7_5 = -0.4957 (lower, so tight spacing only below 2nd rail)
-    //   UAS-101: Y = tY + _12 + fsv = lt.picketTop (same as normal pickets)
+    // ptRes Y position differs per style AND whether circles are active:
+    //   UAF-201 normal:      Y = tY + _12 + fsv - _7_5 = -0.4957
+    //   UAF-201 with circles: Y = tY + _7_5 + fsv = -0.4195 (moves UP to meet raised r1)
+    //   UAS-101 normal:      Y = tY + _12 + fsv = lt.picketTop
+    //   UAS-101 with circles: Y = tY + _7_5 + fsv (same bump)
     // pbRes uses separate clip plane for puppy support.
     var isProSpacing = styleDef && (styleDef.code === 'UAF-201' || styleDef.code === 'UAS-101');
-    // ptRes Y: UAF-201 uses PTRES_Y_UAF201 (needs height offset), UAS-101 uses picketTop (already offset above)
-    var ptResTransform = (styleDef && styleDef.code === 'UAF-201') ? offsetY(PTRES_Y_UAF201, 0, hOff) : picketTop;
+    // Ultra: if(tcr){ mY(grptx, tY+_7_5+fsv); } — pro pickets move up when circles active
+    var ptResTransform;
+    if (styleDef && styleDef.code === 'UAF-201') {
+        if (hasTopCircles) {
+            // tY + _7_5 + fsv = -0.610 + 0.1905 + 0 = -0.4195 (+ hOff for height)
+            ptResTransform = [1,0,0,0, 0,1,0,0, 0,0,1,0, 0, -0.4195 + hOff, 0, 1];
+        } else {
+            ptResTransform = offsetY(PTRES_Y_UAF201, 0, hOff);
+        }
+    } else if (styleDef && styleDef.code === 'UAS-101') {
+        if (hasTopCircles) {
+            // tY + _7_5 + fsv = -0.610 + 0.1905 + (-0.152) = -0.5715 (+ hOff)
+            ptResTransform = [1,0,0,0, 0,1,0,0, 0,0,1,0, 0, -0.5715 + hOff, 0, 1];
+        } else {
+            ptResTransform = picketTop;
+        }
+    } else {
+        ptResTransform = picketTop;
+    }
     loader.load(getModelPath('ptRes', config), function(geo) {
         var mesh = new THREE.Mesh(geo, makeClipMat(clips.pt));
         snap(mesh, ptResTransform);
