@@ -202,8 +202,13 @@ GateRenderer.prototype.buildGate = function(config) {
     var leaf = config.leaf || '2';
     var isDoubleLeaf = (leaf === '2');
 
-    // Per-leaf spatial transforms (extraction-verified from live Ultra)
-    var lt = LEAF_TRANSFORMS[leaf] || LEAF_TRANSFORMS['2'];
+    // Spatial transforms: ALWAYS use the flat family ('2') baseline transforms.
+    // Ultra's Y positions depend on style family (fsv), NOT leaf count (single/double).
+    // LEAF_TRANSFORMS['1'] has fsv baked in and must NOT be used — fsv is applied
+    // separately via offsetY() for spear styles.
+    // config.leaf ('1'=single, '2'=double) only affects MODEL file paths (geometry),
+    // not the Y positions of rails, pickets, or caps.
+    var lt = LEAF_TRANSFORMS['2'];
 
     // Look up style metadata for finial/stagger decisions
     var styleDef = FENCE_STYLES.find(function(s) { return s.id === config.styleId; });

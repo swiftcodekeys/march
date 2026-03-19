@@ -33,7 +33,8 @@ var StyleTab = function(props) {
                 ...prev,
                 styleId: styleId,
                 post: style.postDefault,
-                leaf: style.leafDefault,
+                // Preserve user's single/double gate choice when switching styles
+                leaf: prev.leaf,
                 finial: style.hasFinials ? 'fs' : null,
                 accessories: {},
             };
