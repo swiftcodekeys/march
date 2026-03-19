@@ -459,7 +459,10 @@ GateRenderer.prototype.buildGate = function(config) {
     loader.load(getModelPath('pbRes', config), function(geo) {
         var mesh = new THREE.Mesh(geo, makeClipMat(clips.pbRes));
         snap(mesh, M_IDENTITY);
-        mesh.visible = isProSpacing;
+        // Ultra: grpbx visible for Pro spacing OR puppy pickets
+        // When puppy is active, these bottom extra pickets fill the gap
+        // between the bottom rail and the puppy rail (clipped by pbRes plane)
+        mesh.visible = isProSpacing || hasPuppy;
         gate.add(mesh);
     });
 
