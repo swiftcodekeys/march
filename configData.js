@@ -255,7 +255,9 @@ export function getModelPath(type, config) {
   switch (type) {
     // Posts (directory 0)
     case 'po40d':   return MODEL_BASE + '0/po40d.json';
+    case 'po40s':   return MODEL_BASE + '0/po40s.json';
     case 'po14':    return MODEL_BASE + '0/po14.json';
+    case 'po12':    return MODEL_BASE + '0/po12.json';
     case 'po23':    return MODEL_BASE + '0/po23.json';
 
     // Top rails (directory 1) — arch-specific geometry

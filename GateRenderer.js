@@ -12,7 +12,7 @@
 
 import {
     snap,
-    M_HINGE, M_IDENTITY, M_CAPS, CAP_INNER_Y,
+    M_HINGE, M_HINGE_SINGLE, M_IDENTITY, M_CAPS, M_CAPS_SINGLE, CAP_INNER_Y,
     LEAF_TRANSFORMS, M_RAIL_PUPPY,
     CENTER_GAP,
     CLIP_POST, CLIP_PO23, CLIP_PT, CLIP_PB, HEIGHT_CLIP_OFFSET, POST_CLIP_72,
@@ -298,9 +298,14 @@ GateRenderer.prototype.buildGate = function(config) {
     // HINGES — only for post mount
     // Height offset: top hinges (indices 0, 1) move with height; bottom hinges (2, 3) stay fixed
     // Ultra validated: at 60" top hinges Y=1.374, at 48" Y=1.069 (diff=-0.305). Bottom always Y=0.225.
+    // Single gate (lfI=1): hng0 and hng2 (left side, indices 0,2) are hidden.
+    // Single uses xS=±1.823, double uses xD=±1.778 (from Ultra's hngs/movX).
     if (isPostMount) {
+        var hingeTransforms = isDoubleLeaf ? M_HINGE : M_HINGE_SINGLE;
         loader.load(getModelPath('hinge', config), function(geo) {
-            M_HINGE.forEach(function(m, idx) {
+            hingeTransforms.forEach(function(m, idx) {
+                // Single gate: skip left hinges (indices 0, 2)
+                if (!isDoubleLeaf && (idx === 0 || idx === 2)) return;
                 var mesh = new THREE.Mesh(geo, makeMat());
                 var hingeM = (idx <= 1) ? offsetY(m, 0, hOff) : m;
                 snap(mesh, hingeM);
@@ -310,35 +315,49 @@ GateRenderer.prototype.buildGate = function(config) {
     }
 
     // STRUCTURAL FRAME — only for post mount
+    // Ultra: double uses po40d + po14; single uses po40s + po12 (no po14)
     if (isPostMount) {
-        loader.load(getModelPath('po40d', config), function(geo) {
+        var outerPostModel = isDoubleLeaf ? 'po40d' : 'po40s';
+        loader.load(getModelPath(outerPostModel, config), function(geo) {
             var mesh = new THREE.Mesh(geo, makeClipMat(clips.post));
             snap(mesh, M_IDENTITY);
             gate.add(mesh);
         });
-        loader.load(getModelPath('po14', config), function(geo) {
-            var mesh = new THREE.Mesh(geo, makeClipMat(clips.post));
+        if (isDoubleLeaf) {
+            loader.load(getModelPath('po14', config), function(geo) {
+                var mesh = new THREE.Mesh(geo, makeClipMat(clips.post));
+                snap(mesh, M_IDENTITY);
+                gate.add(mesh);
+            });
+        } else {
+            loader.load(getModelPath('po12', config), function(geo) {
+                var mesh = new THREE.Mesh(geo, makeClipMat(clips.post));
+                snap(mesh, M_IDENTITY);
+                gate.add(mesh);
+            });
+        }
+    }
+
+    // PO23 inner stiles — only for double gate
+    // Single gate has no center seam posts (Ultra viz(): pob23.visible = false when lfI=1)
+    if (isDoubleLeaf) {
+        loader.load(getModelPath('po23', config), function(geo) {
+            var mesh = new THREE.Mesh(geo, makeClipMat(clips.post23));
             snap(mesh, M_IDENTITY);
             gate.add(mesh);
         });
     }
 
-    // PO23 inner stiles — gap is baked into po23.json model geometry (SPATIAL_TRUTH.json)
-    // Ultra does NOT vertex-shift po23. Previous CENTER_GAP code was wrong and has been removed.
-    loader.load(getModelPath('po23', config), function(geo) {
-        var mesh = new THREE.Mesh(geo, makeClipMat(clips.post23));
-        snap(mesh, M_IDENTITY);
-        gate.add(mesh);
-    });
-
     // POST CAPS — only for post mount
     // Height offset: ALL caps move with height (Ultra validated: outer caps 1.5725→1.2675 at 48")
+    // Single gate: center caps (indices 4,5) are hidden. Uses xS positions.
     if (isPostMount && config.postCap) {
+        var capTransforms = isDoubleLeaf ? M_CAPS : M_CAPS_SINGLE;
         loader.load(getModelPath('postCap', config), function(geo) {
-            M_CAPS.forEach(function(m, idx) {
+            capTransforms.forEach(function(m, idx) {
                 var mesh = new THREE.Mesh(geo, makeMat());
-                // Inner caps (indices 4,5): arch-aware Y from CAP_INNER_Y
-                if (idx >= 4) {
+                // Double gate: inner caps (indices 4,5) use arch-aware Y
+                if (isDoubleLeaf && idx >= 4) {
                     var adjusted = m.slice();
                     adjusted[13] = (CAP_INNER_Y[archId] || CAP_INNER_Y.s) + hOff;
                     snap(mesh, adjusted);
