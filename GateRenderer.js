@@ -464,7 +464,7 @@ GateRenderer.prototype.buildGate = function(config) {
             loader.load(getModelPath('finial', config), function(geo) {
                 finPositions.forEach(function(pos) {
                     var mesh = new THREE.Mesh(geo, makeMat());
-                    snap(mesh, [1,0,0,0, 0,1,0,0, 0,0,1,0, pos[0], finBaseY + pos[1], pos[2], 1]);
+                    snap(mesh, [1,0,0,0, 0,1,0,0, 0,0,1,0, pos[0], finBaseY + pos[1] + hOff, pos[2], 1]);
                     gate.add(mesh);
                 });
             });
