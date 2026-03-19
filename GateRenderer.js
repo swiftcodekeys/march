@@ -202,6 +202,10 @@ GateRenderer.prototype.buildGate = function(config) {
     var leaf = config.leaf || '2';
     var isDoubleLeaf = (leaf === '2');
 
+    // Direct mount: bump camera zoom to fill the gap left by hidden outer posts
+    this.camera.zoom = (config.mount === 'd') ? 1.85 : 1.788;
+    this.camera.updateProjectionMatrix();
+
     // Spatial transforms: ALWAYS use the flat family ('2') baseline transforms.
     // Ultra's Y positions depend on style family (fsv), NOT leaf count (single/double).
     // LEAF_TRANSFORMS['1'] has fsv baked in and must NOT be used — fsv is applied
