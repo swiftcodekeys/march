@@ -257,12 +257,28 @@ GateRenderer.prototype.buildGate = function(config) {
     }
 
     // Puppy clip: tighten res picket bottom when puppy is active
+    // Ultra puppy types and their rail Y / clip values:
+    //   pupst (std):  r3y = bY + _12 = 0.4598,  clip = r3y + 0.2 = 0.6598
+    //   pupfl (fls):  r3y = bY + _16 = 0.4572 (bY=_2=0.0508), clip = r3y + 0.2 = 0.6572
+    //   pupcl (plg/spe/tri/qua + staggered): r3y = bY + _7_5 = 0.3455, clip = _18+0.02 = 0.477
     var hasPuppy = config.accessories && config.accessories.pup;
+    var pupId = hasPuppy ? config.accessories.pup : null;
+    // Classic puppy variants (have finials on the short pickets)
+    var isClassicPuppy = pupId && ['plg','pls','spe','sps','tri','trs','qua','qus'].indexOf(pupId) !== -1;
+    var isFlushPuppy = (pupId === 'fls');
     if (hasPuppy) {
-        clips.pbRes.constant = CLIP_PB_PUPPY_STD;
+        if (isClassicPuppy) {
+            clips.pbRes.constant = CLIP_PB_PUPPY_CLP;  // 0.477
+        } else if (isFlushPuppy) {
+            clips.pbRes.constant = 0.6572;  // flush: r3y(0.4572) + 0.2
+        } else {
+            clips.pbRes.constant = CLIP_PB_PUPPY_STD;  // 0.6598
+        }
     } else {
         clips.pbRes.constant = CLIP_PB;
     }
+    // Puppy rail Y position per type (used below when loading rails)
+    var puppyRailY = isClassicPuppy ? 0.3455 : (isFlushPuppy ? 0.4572 : 0.4598);
 
     var color = config.color || { threeHex: 0x080808 };
 
@@ -404,11 +420,11 @@ GateRenderer.prototype.buildGate = function(config) {
             gate.add(meshX);
         }
 
-        // PUPPY RAIL — extraction truth: puppy_positions_standard.json
-        // Adds a rail at Y=0.4598 to block the bottom gap
+        // PUPPY RAIL — positioned per puppy type
+        // Ultra: r3 visible when pup==true, Y set by movY per pupI
         if (hasPuppy) {
             var meshP = new THREE.Mesh(geo, makeMat());
-            snap(meshP, M_RAIL_PUPPY);
+            snap(meshP, [1,0,0,0, 0,1,0,0, 0,0,1,0, 0,puppyRailY,0,1]);
             gate.add(meshP);
         }
     });

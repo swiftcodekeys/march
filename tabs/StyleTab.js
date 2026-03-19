@@ -29,6 +29,11 @@ var StyleTab = function(props) {
     var handleStyleChange = function(styleId) {
         var style = FENCE_STYLES.find(function(s) { return s.id === styleId; });
         onConfigChange(function(prev) {
+            // Preserve puppy picket selection when switching styles
+            var newAccessories = {};
+            if (prev.accessories && prev.accessories.pup) {
+                newAccessories.pup = prev.accessories.pup;
+            }
             return {
                 ...prev,
                 styleId: styleId,
@@ -36,7 +41,7 @@ var StyleTab = function(props) {
                 // Preserve user's single/double gate choice when switching styles
                 leaf: prev.leaf,
                 finial: style.hasFinials ? 'fs' : null,
-                accessories: {},
+                accessories: newAccessories,
             };
         });
     };
