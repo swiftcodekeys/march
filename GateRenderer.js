@@ -316,30 +316,30 @@ GateRenderer.prototype.buildGate = function(config) {
 
     var loader = new THREE.JSONLoader();
 
-    // Mount type: 'p' = post mount (default), 'd' = direct mount (no posts/hinges/caps)
+    // Mount type: 'p' = post mount (default), 'd' = direct mount
+    // Ultra direct mount: hides outer posts (po40d/po40s) + outer caps (pc0/pc1)
+    // Keeps visible: hinges, inner posts (po14/po12), center stiles (po23), inner caps
     var isPostMount = (config.mount !== 'd');
 
-    // HINGES — only for post mount
-    // Height offset: top hinges (indices 0, 1) move with height; bottom hinges (2, 3) stay fixed
-    // Ultra validated: at 60" top hinges Y=1.374, at 48" Y=1.069 (diff=-0.305). Bottom always Y=0.225.
+    // HINGES — always visible (both mount types)
+    // Direct mount: hinges attach directly to wall/column.
+    // Height offset: top hinges (indices 0, 1) move with height; bottom hinges (2, 3) stay fixed.
     // Single gate (lfI=1): hng0 and hng2 (left side, indices 0,2) are hidden.
     // Single uses xS=±1.823, double uses xD=±1.778 (from Ultra's hngs/movX).
-    if (isPostMount) {
-        var hingeTransforms = isDoubleLeaf ? M_HINGE : M_HINGE_SINGLE;
-        loader.load(getModelPath('hinge', config), function(geo) {
-            hingeTransforms.forEach(function(m, idx) {
-                // Single gate: skip left hinges (indices 0, 2)
-                if (!isDoubleLeaf && (idx === 0 || idx === 2)) return;
-                var mesh = new THREE.Mesh(geo, makeMat());
-                var hingeM = (idx <= 1) ? offsetY(m, 0, hOff) : m;
-                snap(mesh, hingeM);
-                gate.add(mesh);
-            });
+    var hingeTransforms = isDoubleLeaf ? M_HINGE : M_HINGE_SINGLE;
+    loader.load(getModelPath('hinge', config), function(geo) {
+        hingeTransforms.forEach(function(m, idx) {
+            // Single gate: skip left hinges (indices 0, 2)
+            if (!isDoubleLeaf && (idx === 0 || idx === 2)) return;
+            var mesh = new THREE.Mesh(geo, makeMat());
+            var hingeM = (idx <= 1) ? offsetY(m, 0, hOff) : m;
+            snap(mesh, hingeM);
+            gate.add(mesh);
         });
-    }
+    });
 
-    // STRUCTURAL FRAME — only for post mount
-    // Ultra: double uses po40d + po14; single uses po40s + po12 (no po14)
+    // OUTER POSTS — only for post mount (hidden for direct mount)
+    // Ultra: if(mntI=='d'){ pob40s.visible=false; pob40d.visible=false; }
     if (isPostMount) {
         var outerPostModel = isDoubleLeaf ? 'po40d' : 'po40s';
         loader.load(getModelPath(outerPostModel, config), function(geo) {
@@ -347,22 +347,25 @@ GateRenderer.prototype.buildGate = function(config) {
             snap(mesh, M_IDENTITY);
             gate.add(mesh);
         });
-        if (isDoubleLeaf) {
-            loader.load(getModelPath('po14', config), function(geo) {
-                var mesh = new THREE.Mesh(geo, makeClipMat(clips.post));
-                snap(mesh, M_IDENTITY);
-                gate.add(mesh);
-            });
-        } else {
-            loader.load(getModelPath('po12', config), function(geo) {
-                var mesh = new THREE.Mesh(geo, makeClipMat(clips.post));
-                snap(mesh, M_IDENTITY);
-                gate.add(mesh);
-            });
-        }
     }
 
-    // PO23 inner stiles — only for double gate
+    // INNER POSTS — always visible (both mount types)
+    // Ultra: pob14.visible=true (double) or pob12.visible=true (single) regardless of mntI
+    if (isDoubleLeaf) {
+        loader.load(getModelPath('po14', config), function(geo) {
+            var mesh = new THREE.Mesh(geo, makeClipMat(clips.post));
+            snap(mesh, M_IDENTITY);
+            gate.add(mesh);
+        });
+    } else {
+        loader.load(getModelPath('po12', config), function(geo) {
+            var mesh = new THREE.Mesh(geo, makeClipMat(clips.post));
+            snap(mesh, M_IDENTITY);
+            gate.add(mesh);
+        });
+    }
+
+    // PO23 inner stiles — only for double gate (both mount types)
     // Single gate has no center seam posts (Ultra viz(): pob23.visible = false when lfI=1)
     if (isDoubleLeaf) {
         loader.load(getModelPath('po23', config), function(geo) {
@@ -372,13 +375,15 @@ GateRenderer.prototype.buildGate = function(config) {
         });
     }
 
-    // POST CAPS — only for post mount
-    // Height offset: ALL caps move with height (Ultra validated: outer caps 1.5725→1.2675 at 48")
-    // Single gate: center caps (indices 4,5) are hidden. Uses xS positions.
-    if (isPostMount && config.postCap) {
+    // POST CAPS
+    // Ultra: direct mount hides pc0/pc1 (outer caps, our indices 0-1).
+    // Inner caps (indices 2+) stay visible for both mount types.
+    if (config.postCap) {
         var capTransforms = isDoubleLeaf ? M_CAPS : M_CAPS_SINGLE;
         loader.load(getModelPath('postCap', config), function(geo) {
             capTransforms.forEach(function(m, idx) {
+                // Direct mount: skip outer caps (indices 0, 1)
+                if (!isPostMount && idx <= 1) return;
                 var mesh = new THREE.Mesh(geo, makeMat());
                 // Double gate: inner caps (indices 4,5) use arch-aware Y
                 if (isDoubleLeaf && idx >= 4) {
