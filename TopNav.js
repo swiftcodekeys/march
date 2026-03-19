@@ -41,7 +41,7 @@ var TopNav = function(props) {
             <div className="topnav-right">
                 <button className="nav-btn" onClick={onReset}>{'\u21BA'} Reset</button>
                 <button className="nav-btn" onClick={onSaveImage}>{'\uD83D\uDCF7'} Save</button>
-                <button className="btn-quote-nav" onClick={function() { /* TODO */ }}>Get Quote &rarr;</button>
+                <button className="btn-quote-nav" onClick={function() { /* TODO */ }}>Get Quote <span className="arrow">&rarr;</span></button>
             </div>
         </nav>
     );

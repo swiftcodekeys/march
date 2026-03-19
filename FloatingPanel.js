@@ -134,13 +134,13 @@ var FloatingPanel = function(props) {
     var isLast = currentIndex === TABS.length - 1;
     var isBeforeLast = currentIndex === TABS.length - 2;
 
-    var nextLabel = '';
+    var nextText = '';
     if (isLast) {
-        nextLabel = 'Get Instant Quote \u2192';
+        nextText = 'Get Instant Quote';
     } else if (isBeforeLast) {
-        nextLabel = 'Get Quote \u2192';
+        nextText = 'Get Quote';
     } else {
-        nextLabel = 'Next: ' + TABS[currentIndex + 1].label + ' \u2192';
+        nextText = 'Next: ' + TABS[currentIndex + 1].label;
     }
 
     var panelClassName = 'float-panel' + (collapsed ? ' collapsed' : '');
@@ -212,7 +212,7 @@ var FloatingPanel = function(props) {
                         disabled={isFirst}
                         style={isFirst ? { opacity: 0.4, cursor: 'default' } : {}}
                     >
-                        &larr; Back
+                        <span className="arrow-left">&larr;</span> Back
                     </button>
                     <div className="progress-dots">
                         {TABS.map(function(tab, i) {
@@ -229,7 +229,7 @@ var FloatingPanel = function(props) {
                         className={'btn-next' + (isLast ? ' cta-pulse' : '')}
                         onClick={handleNext}
                     >
-                        {nextLabel}
+                        {nextText} <span className="arrow">&rarr;</span>
                     </button>
                 </div>
             </div>
