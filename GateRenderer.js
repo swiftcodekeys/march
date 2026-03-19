@@ -12,7 +12,7 @@
 
 import {
     snap,
-    M_HINGE, M_HINGE_SINGLE, M_IDENTITY, M_CAPS, M_CAPS_SINGLE, CAP_INNER_Y,
+    M_HINGE, M_HINGE_SINGLE, M_HINGE_DIRECT, M_IDENTITY, M_CAPS, M_CAPS_SINGLE, CAP_INNER_Y,
     LEAF_TRANSFORMS, M_RAIL_PUPPY,
     CENTER_GAP,
     CLIP_POST, CLIP_PO23, CLIP_PT, CLIP_PB, HEIGHT_CLIP_OFFSET, POST_CLIP_72,
@@ -322,11 +322,12 @@ GateRenderer.prototype.buildGate = function(config) {
     var isPostMount = (config.mount !== 'd');
 
     // HINGES — always visible (both mount types)
-    // Direct mount: hinges attach directly to wall/column.
+    // Direct mount: hinges push out to ±1.829 (outer post X) to fill the gap.
+    // Post mount: double xD=±1.778, single xS=±1.823 (from Ultra's hngs/movX).
     // Height offset: top hinges (indices 0, 1) move with height; bottom hinges (2, 3) stay fixed.
     // Single gate (lfI=1): hng0 and hng2 (left side, indices 0,2) are hidden.
-    // Single uses xS=±1.823, double uses xD=±1.778 (from Ultra's hngs/movX).
-    var hingeTransforms = isDoubleLeaf ? M_HINGE : M_HINGE_SINGLE;
+    var hingeTransforms = !isPostMount ? M_HINGE_DIRECT
+        : (isDoubleLeaf ? M_HINGE : M_HINGE_SINGLE);
     loader.load(getModelPath('hinge', config), function(geo) {
         hingeTransforms.forEach(function(m, idx) {
             // Single gate: skip left hinges (indices 0, 2)
