@@ -193,7 +193,7 @@ var FloatingPanel = function(props) {
                             rel="noopener"
                             style={{ marginTop: 4, display: 'inline-flex' }}
                         >
-                            {header.linkLabel} &rarr;
+                            {header.linkLabel} <span className="arrow">&rarr;</span>
                         </a>
                     )}
                 </div>
