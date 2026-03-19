@@ -213,29 +213,42 @@ GateRenderer.prototype.buildGate = function(config) {
     // from flat family (fsv=0). Ultra applies fsv=-0.152 to ALL rail and picket Y positions
     // for spear styles. We apply it here so the base transforms stay untouched.
     var fsv = (styleDef && styleDef.category === 'spear') ? -0.152 : 0;
-    function applyFsv(m, fsvOffset) {
-        if (fsvOffset === 0) return m;
+
+    // hOff: height offset. Ultra repositions the TOP of the gate (rails, caps, picket tops,
+    // top hinges) by ±0.305m per height step while anchoring the bottom. The mid rail gets
+    // half the offset. Bottom rails, bottom hinges, picket bottoms stay fixed.
+    // Validated via Playwright scene extraction: 48" vs 60" vs 72" element positions.
+    var hOff = HEIGHT_CLIP_OFFSET[config.height] || 0;
+
+    // offsetY: apply both fsv and hOff to a Matrix4 Y position (index 13)
+    function offsetY(m, fsvVal, heightVal) {
+        var total = (fsvVal || 0) + (heightVal || 0);
+        if (total === 0) return m;
         var out = m.slice();
-        out[13] = out[13] + fsvOffset;
+        out[13] = out[13] + total;
         return out;
     }
-    var railT0    = applyFsv(lt.railT0, fsv);        // full fsv
-    var railT1    = applyFsv(lt.railT1, fsv);        // full fsv
-    var railB0    = applyFsv(lt.railB0, fsv / 2);    // half fsv — midpoint of T1 and B2
-    var railB1    = lt.railB1;                        // NO fsv — bY + offset, fixed
-    var railB2Raw = lt.railB2;                          // NO fsv — bY = 0.155 always
+
+    // Top rails: full fsv + full height offset
+    var railT0    = offsetY(lt.railT0, fsv, hOff);
+    var railT1    = offsetY(lt.railT1, fsv, hOff);
+    // Mid rail: half fsv + half height offset (anchored between top and bottom)
+    var railB0    = offsetY(lt.railB0, fsv / 2, hOff / 2);
+    // Bottom rails: no fsv, no height offset (anchored at ground)
+    var railB1    = lt.railB1;
+    var railB2Raw = lt.railB2;
     var hasRes = config.accessories && config.accessories.res;
-    var railB2    = hasRes ? RES_BOTTOM_RAIL_Y : railB2Raw;  // res=true → bY = 0.0508
-    var picketTop = applyFsv(lt.picketTop, fsv);      // full fsv
-    var ptOddStagger = (lt.picketTopOddStagger) ? applyFsv(lt.picketTopOddStagger, fsv) : null;
+    var railB2    = hasRes ? RES_BOTTOM_RAIL_Y : railB2Raw;
+    // Picket tops: full fsv + full height offset
+    var picketTop = offsetY(lt.picketTop, fsv, hOff);
+    var ptOddStagger = (lt.picketTopOddStagger) ? offsetY(lt.picketTopOddStagger, fsv, hOff) : null;
 
     // Dynamic height clipping (validated against Ultra live tool)
-    var heightOffset = HEIGHT_CLIP_OFFSET[config.height] || 0;
-    clips.post.constant = CLIP_POST + heightOffset;
+    clips.post.constant = CLIP_POST + hOff;
     if (config.height === '72') {
         clips.post23.constant = POST_CLIP_72;
     } else {
-        clips.post23.constant = (CLIP_PO23[archId] || CLIP_PO23.e) + heightOffset;
+        clips.post23.constant = (CLIP_PO23[archId] || CLIP_PO23.e) + hOff;
     }
 
     // Puppy clip: tighten res picket bottom when puppy is active
@@ -283,11 +296,14 @@ GateRenderer.prototype.buildGate = function(config) {
     var isPostMount = (config.mount !== 'd');
 
     // HINGES — only for post mount
+    // Height offset: top hinges (indices 0, 1) move with height; bottom hinges (2, 3) stay fixed
+    // Ultra validated: at 60" top hinges Y=1.374, at 48" Y=1.069 (diff=-0.305). Bottom always Y=0.225.
     if (isPostMount) {
         loader.load(getModelPath('hinge', config), function(geo) {
-            M_HINGE.forEach(function(m) {
+            M_HINGE.forEach(function(m, idx) {
                 var mesh = new THREE.Mesh(geo, makeMat());
-                snap(mesh, m);
+                var hingeM = (idx <= 1) ? offsetY(m, 0, hOff) : m;
+                snap(mesh, hingeM);
                 gate.add(mesh);
             });
         });
@@ -316,18 +332,18 @@ GateRenderer.prototype.buildGate = function(config) {
     });
 
     // POST CAPS — only for post mount
+    // Height offset: ALL caps move with height (Ultra validated: outer caps 1.5725→1.2675 at 48")
     if (isPostMount && config.postCap) {
         loader.load(getModelPath('postCap', config), function(geo) {
             M_CAPS.forEach(function(m, idx) {
                 var mesh = new THREE.Mesh(geo, makeMat());
-                // Inner caps (indices 4,5): base X stays ±0.044 (no CENTER_GAP push) + arch-aware Y
-                // Ultra proof: seam caps at ±0.044 even with CENTER_GAP active on po23
+                // Inner caps (indices 4,5): arch-aware Y from CAP_INNER_Y
                 if (idx >= 4) {
                     var adjusted = m.slice();
-                    adjusted[13] = CAP_INNER_Y[archId] || CAP_INNER_Y.s;
+                    adjusted[13] = (CAP_INNER_Y[archId] || CAP_INNER_Y.s) + hOff;
                     snap(mesh, adjusted);
                 } else {
-                    snap(mesh, m);
+                    snap(mesh, offsetY(m, 0, hOff));
                 }
                 gate.add(mesh);
             });
@@ -337,7 +353,7 @@ GateRenderer.prototype.buildGate = function(config) {
     // TOP RAILS — per-leaf Y positions
     // Haven (UAB-200, gN==4): r1 rail sits at -0.07 offset (compressed top gap)
     // vs standard -0.1905 offset. SPATIAL_TRUTH.json → rails → r1_second_rail_y → haven_gN4
-    var railT1Final = (styleDef && styleDef.code === 'UAB-200') ? HAVEN_RAIL_T1 : railT1;
+    var railT1Final = (styleDef && styleDef.code === 'UAB-200') ? offsetY(HAVEN_RAIL_T1, 0, hOff) : railT1;
     loader.load(getModelPath('railTop', config), function(geo) {
         [railT0, railT1Final].forEach(function(m) {
             var mesh = new THREE.Mesh(geo, makeMat());
@@ -408,7 +424,8 @@ GateRenderer.prototype.buildGate = function(config) {
     //   UAS-101: Y = tY + _12 + fsv = lt.picketTop (same as normal pickets)
     // pbRes uses separate clip plane for puppy support.
     var isProSpacing = styleDef && (styleDef.code === 'UAF-201' || styleDef.code === 'UAS-101');
-    var ptResTransform = (styleDef && styleDef.code === 'UAF-201') ? PTRES_Y_UAF201 : picketTop;
+    // ptRes Y: UAF-201 uses PTRES_Y_UAF201 (needs height offset), UAS-101 uses picketTop (already offset above)
+    var ptResTransform = (styleDef && styleDef.code === 'UAF-201') ? offsetY(PTRES_Y_UAF201, 0, hOff) : picketTop;
     loader.load(getModelPath('ptRes', config), function(geo) {
         var mesh = new THREE.Mesh(geo, makeClipMat(clips.pt));
         snap(mesh, ptResTransform);

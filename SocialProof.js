@@ -5,7 +5,7 @@ var MESSAGES = [
     'Top seller for pool safety: <strong>Haven</strong> in Black',
     '<strong>Charleston Pro</strong> | best for pet owners',
     'Estate arch is the most requested upgrade',
-    'Veteran-owned &amp; American-supplied',
+    'Veteran-owned &amp; American-made',
     'Limited Lifetime Warranty on all panels',
     'Pool code compliant in all 50 states',
     'Aluminum won\u2019t rust, rot, or need repainting',
