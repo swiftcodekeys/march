@@ -119,6 +119,18 @@ export var CLIP_PO23 = {
     r: 1.2827,   // Royal
 };
 
+// Height clipping offsets relative to 60" baseline (validated via Playwright scrape of Ultra)
+// Gate clips: 48"=1.2825, 60"=1.5875, 72"=1.8925 (step = 0.305)
+// Post clips: 48"=1.5873, 60"=1.8923, 72"=3.0 (72" special: no post clipping)
+export var HEIGHT_CLIP_OFFSET = {
+    '48': -0.305,
+    '60': 0,
+    '72': 0.305,
+};
+
+// 72" posts use constant=3.0 (effectively no clipping — full height posts)
+export var POST_CLIP_72 = 3.0;
+
 // ---- PUPPY PANEL (from puppy_positions_standard.json, puppy_truth_manifest.json) ----
 // Puppy Standard: repositions a rail to Y=0.4598, tightens res picket bottom clip
 // Puppy Classic Plugged: same + adds 28 finial meshes + even tighter clip

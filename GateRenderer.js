@@ -15,7 +15,7 @@ import {
     M_HINGE, M_IDENTITY, M_CAPS, CAP_INNER_Y,
     LEAF_TRANSFORMS, M_RAIL_PUPPY,
     CENTER_GAP,
-    CLIP_POST, CLIP_PO23, CLIP_PT, CLIP_PB,
+    CLIP_POST, CLIP_PO23, CLIP_PT, CLIP_PB, HEIGHT_CLIP_OFFSET, POST_CLIP_72,
     CLIP_PB_PUPPY_STD, CLIP_PB_PUPPY_CLP,
     ACCENT_CIRCLE_BOTTOM_Y, ACCENT_BUTTERFLY_BOTTOM_Y,
     ACCENT_POSITIONS, ACCENT_BASE_Y,
@@ -229,9 +229,14 @@ GateRenderer.prototype.buildGate = function(config) {
     var picketTop = applyFsv(lt.picketTop, fsv);      // full fsv
     var ptOddStagger = (lt.picketTopOddStagger) ? applyFsv(lt.picketTopOddStagger, fsv) : null;
 
-    // Arch-specific clipping (verified against legacy ultra_dsg_min.js)
-    clips.post.constant = CLIP_POST;
-    clips.post23.constant = CLIP_PO23[archId] || CLIP_PO23.e;
+    // Dynamic height clipping (validated against Ultra live tool)
+    var heightOffset = HEIGHT_CLIP_OFFSET[config.height] || 0;
+    clips.post.constant = CLIP_POST + heightOffset;
+    if (config.height === '72') {
+        clips.post23.constant = POST_CLIP_72;
+    } else {
+        clips.post23.constant = (CLIP_PO23[archId] || CLIP_PO23.e) + heightOffset;
+    }
 
     // Puppy clip: tighten res picket bottom when puppy is active
     var hasPuppy = config.accessories && config.accessories.pup;
