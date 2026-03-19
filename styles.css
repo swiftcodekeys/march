@@ -237,8 +237,9 @@ html, body {
 .float-panel {
   position: absolute;
   right: 20px;
-  top: 16px;
-  max-height: calc(100% - 72px);
+  top: 50%;
+  transform: translateY(-50%);
+  max-height: calc(100% - 100px);
   width: 370px;
   background: var(--panel);
   backdrop-filter: blur(20px);
@@ -254,7 +255,7 @@ html, body {
   transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
 }
 .float-panel.collapsed {
-  transform: translateX(calc(100% + 40px));
+  transform: translateY(-50%) translateX(calc(100% + 40px));
   pointer-events: none;
 }
 .float-panel.collapsed .panel-tabs,
@@ -394,7 +395,8 @@ html, body {
   font-size: 11px;
   color: var(--text-hint);
   font-weight: 500;
-  padding: 6px 0 2px;
+  padding: 10px 0 0;
+  flex-shrink: 0;
 }
 
 /* --- Style Cards (grid layout for existing tabs) --- */
@@ -725,9 +727,9 @@ html, body {
 /* --- Quote Layout --- */
 .quote-layout {
   display: flex;
-  gap: 40px;
-  align-items: center;
-  justify-content: center;
+  flex-direction: column;
+  gap: 20px;
+  align-items: stretch;
   width: 100%;
 }
 .quote-summary {
@@ -738,14 +740,20 @@ html, body {
   justify-content: space-between;
   padding: 9px 0;
   border-bottom: 1px solid var(--border);
-  font-size: 15px;
+  font-size: 14px;
+  gap: 12px;
 }
 .quote-row .ql {
   color: var(--text-secondary);
+  flex-shrink: 0;
 }
 .quote-row .qv {
   color: var(--text-primary);
   font-weight: 700;
+  text-align: right;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .btn-big-quote {
   padding: 18px 44px;

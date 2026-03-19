@@ -204,6 +204,7 @@ var FloatingPanel = function(props) {
                     </div>
                 </div>
 
+                <div className="footer-cta-hint">Complete your design and get instant quote</div>
                 <div className="panel-footer">
                     <button
                         className="btn-back"
@@ -231,7 +232,6 @@ var FloatingPanel = function(props) {
                         {nextLabel}
                     </button>
                 </div>
-                <div className="footer-cta-hint">Complete your design and get instant quote</div>
             </div>
         </div>
     );
