@@ -529,18 +529,26 @@ GateRenderer.prototype.buildGate = function(config) {
     // ACCENT_BASE_Y values were measured at 60" flat (fsv=0, hOff=0).
     //   circle:    1.397 ≈ (railT0 + railT1) / 2 = (1.489 + 1.2985) / 2
     //   butterfly: 1.363 (slightly lower within same rail gap)
-    // Scroll sits at mid rail (0.727) → needs fsv/2 + hOff/2.
+    // Scroll Y: Ultra uses midpoint of r1y and r4y: (r1y/2) + (r4y/2)
     // Base accents are anchored near the bottom rail → no offset needed.
     var accentTopOffset = fsv + hOff;
-    var accentMidOffset = (fsv / 2) + (hOff / 2);
+    // Scroll Y: midpoint between second rail (r1) and bottom rail (r4)
+    // Ultra: mY(gracs, (r1y/2)+(r4y/2)-rAdj) where rAdj=0 for standard, 0.152 for royal
+    var r1yActual = railT1Final[13];  // Y from the Matrix4 (index 13)
+    var r4yActual = railB2[13];       // bottom rail Y
+    var rAdj = (archId === 'r') ? 0.152 : 0;
+    var scrollY = (r1yActual / 2) + (r4yActual / 2) - rAdj;
     if (config.accessories) {
-        // SCROLL — 2 meshes at ±0.844, Y=0.727 (verified: Ultra "Scroll" accent)
-        // Mid rail gets half fsv + half hOff
+        // SCROLL — Ultra position arrays: scr2 = '-0.844,0,0*0.844,0,0' (double)
+        //                                  scr1 = '0.889,0,0*0,0,0*-0.889,0,0' (single)
         if (config.accessories.scr) {
+            var scrollPositions = isDoubleLeaf
+                ? [[-0.844, 0], [0.844, 0]]
+                : [[0.889, 0], [0, 0], [-0.889, 0]];
             loader.load(getModelPath('scroll', config), function(geo) {
-                [[-0.844, 0.727 + accentMidOffset], [0.844, 0.727 + accentMidOffset]].forEach(function(pos) {
+                scrollPositions.forEach(function(pos) {
                     var mesh = new THREE.Mesh(geo, makeMat());
-                    snap(mesh, [1,0,0,0, 0,1,0,0, 0,0,1,0, pos[0],pos[1],0,1]);
+                    snap(mesh, [1,0,0,0, 0,1,0,0, 0,0,1,0, pos[0],scrollY,0,1]);
                     gate.add(mesh);
                 });
             });
