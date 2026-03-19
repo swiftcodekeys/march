@@ -287,6 +287,15 @@ GateRenderer.prototype.buildGate = function(config) {
         clips.pbRes.constant = CLIP_PB;
     }
 
+    // FIX: Capture the clip constant NOW before any async loader callbacks fire.
+    // Race condition: React re-renders can call buildGate again, overwriting
+    // clips.pbRes.constant before the loader callback uses it.
+    // Create a dedicated plane so the async callback has the correct value.
+    var capturedPbResPlane = new THREE.Plane(
+        clips.pbRes.normal.clone(),
+        clips.pbRes.constant
+    );
+
     var color = config.color || { threeHex: 0x080808 };
 
     var makeMat = function() {
@@ -512,12 +521,12 @@ GateRenderer.prototype.buildGate = function(config) {
         gate.add(mesh);
     });
     loader.load(getModelPath('pbRes', config), function(geo) {
-        var mesh = new THREE.Mesh(geo, makeClipMat(clips.pbRes));
+        var mesh = new THREE.Mesh(geo, makeClipMat(capturedPbResPlane));
         snap(mesh, M_IDENTITY);
         // Ultra: grpbx visible for Pro spacing OR puppy pickets
         // When puppy is active, these bottom extra pickets fill the gap
         // between the bottom rail and the puppy rail (clipped by pbRes plane)
-        mesh.visible = isProSpacing || hasPuppy;
+        mesh.visible = !!(isProSpacing || hasPuppy);
         gate.add(mesh);
     });
 
