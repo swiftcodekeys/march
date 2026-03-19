@@ -518,11 +518,20 @@ GateRenderer.prototype.buildGate = function(config) {
     }
 
     // ACCESSORIES
+    // Top accents sit between the two top rails → they need full fsv + hOff.
+    // ACCENT_BASE_Y values were measured at 60" flat (fsv=0, hOff=0).
+    //   circle:    1.397 ≈ (railT0 + railT1) / 2 = (1.489 + 1.2985) / 2
+    //   butterfly: 1.363 (slightly lower within same rail gap)
+    // Scroll sits at mid rail (0.727) → needs fsv/2 + hOff/2.
+    // Base accents are anchored near the bottom rail → no offset needed.
+    var accentTopOffset = fsv + hOff;
+    var accentMidOffset = (fsv / 2) + (hOff / 2);
     if (config.accessories) {
         // SCROLL — 2 meshes at ±0.844, Y=0.727 (verified: Ultra "Scroll" accent)
+        // Mid rail gets half fsv + half hOff
         if (config.accessories.scr) {
             loader.load(getModelPath('scroll', config), function(geo) {
-                [[-0.844, 0.727], [0.844, 0.727]].forEach(function(pos) {
+                [[-0.844, 0.727 + accentMidOffset], [0.844, 0.727 + accentMidOffset]].forEach(function(pos) {
                     var mesh = new THREE.Mesh(geo, makeMat());
                     snap(mesh, [1,0,0,0, 0,1,0,0, 0,0,1,0, pos[0],pos[1],0,1]);
                     gate.add(mesh);
@@ -530,21 +539,20 @@ GateRenderer.prototype.buildGate = function(config) {
             });
         }
         // CIRCLE (top) — position arrays from Ultra, per leaf+arch
-        // Ultra uses mesh.position.set(x, baseY + pos[1], z) for each accent
+        // Ultra: grpac.position.y = acY which varies with fsv and height
         if (config.accessories.tcr) {
             var circlePositions = ACCENT_POSITIONS.circle[leaf] && ACCENT_POSITIONS.circle[leaf][archId];
             if (circlePositions) {
                 loader.load(getModelPath('circle', config), function(geo) {
                     circlePositions.forEach(function(pos) {
                         var mesh = new THREE.Mesh(geo, makeMat());
-                        mesh.position.set(pos[0], ACCENT_BASE_Y.circle + pos[1], pos[2]);
+                        mesh.position.set(pos[0], ACCENT_BASE_Y.circle + pos[1] + accentTopOffset, pos[2]);
                         gate.add(mesh);
                     });
                 });
             }
         }
-        // CIRCLES AT BASE — uses same position arrays but at bottom Y
-        // (base accents don't have separate Ultra position arrays yet, so use circle positions with bottom Y)
+        // CIRCLES AT BASE — anchored near bottom rail, no fsv/hOff offset
         if (config.accessories.bcr) {
             var circleBasePositions = ACCENT_POSITIONS.circle[leaf] && ACCENT_POSITIONS.circle[leaf][archId];
             if (circleBasePositions) {
@@ -564,13 +572,13 @@ GateRenderer.prototype.buildGate = function(config) {
                 loader.load(getModelPath('butterfly', config), function(geo) {
                     butterflyPositions.forEach(function(pos) {
                         var mesh = new THREE.Mesh(geo, makeMat());
-                        mesh.position.set(pos[0], ACCENT_BASE_Y.butterfly + pos[1], pos[2]);
+                        mesh.position.set(pos[0], ACCENT_BASE_Y.butterfly + pos[1] + accentTopOffset, pos[2]);
                         gate.add(mesh);
                     });
                 });
             }
         }
-        // BUTTERFLIES AT BASE — uses butterfly position arrays with bottom Y
+        // BUTTERFLIES AT BASE — anchored near bottom rail, no offset
         if (config.accessories.bbu) {
             var butterflyBasePositions = ACCENT_POSITIONS.butterfly[leaf] && ACCENT_POSITIONS.butterfly[leaf][archId];
             if (butterflyBasePositions) {
