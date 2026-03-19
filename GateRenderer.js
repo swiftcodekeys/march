@@ -275,26 +275,24 @@ GateRenderer.prototype.buildGate = function(config) {
 
     // Puppy clip plane: controls how tall the bottom extra pickets appear
     // Ultra: cpY(pbxCp, r3y + 0.2) for std/flush, cpY(pbxCp, _18+0.02) for classic
+    // FIX: Create a FRESH plane per build to eliminate shared-reference mutation.
+    // Race condition: React re-renders call buildGate twice, and the shared
+    // clips.pbRes object gets overwritten before async loader callbacks fire.
+    var pbResConstant;
     if (hasPuppy) {
         if (isClassicPuppy) {
-            clips.pbRes.constant = CLIP_PB_PUPPY_CLP;  // 0.477
+            pbResConstant = CLIP_PB_PUPPY_CLP;  // 0.477
         } else if (isFlushPuppy) {
-            clips.pbRes.constant = 0.6572;  // flush: r3y(0.4572) + 0.2
+            pbResConstant = 0.6572;  // flush: r3y(0.4572) + 0.2
         } else {
-            clips.pbRes.constant = CLIP_PB_PUPPY_STD;  // 0.6598
+            pbResConstant = CLIP_PB_PUPPY_STD;  // 0.6598
         }
     } else {
-        clips.pbRes.constant = CLIP_PB;
+        pbResConstant = CLIP_PB;
     }
-
-    // FIX: Capture the clip constant NOW before any async loader callbacks fire.
-    // Race condition: React re-renders can call buildGate again, overwriting
-    // clips.pbRes.constant before the loader callback uses it.
-    // Create a dedicated plane so the async callback has the correct value.
-    var capturedPbResPlane = new THREE.Plane(
-        clips.pbRes.normal.clone(),
-        clips.pbRes.constant
-    );
+    // New plane per build — not shared, can't be clobbered by re-renders
+    clips.pbRes = new THREE.Plane(new THREE.Vector3(0, -0.735, 0), pbResConstant);
+    var capturedPbResPlane = clips.pbRes;
 
     var color = config.color || { threeHex: 0x080808 };
 
