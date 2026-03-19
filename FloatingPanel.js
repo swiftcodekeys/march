@@ -191,7 +191,7 @@ var FloatingPanel = function(props) {
                             className="btn-product"
                             target="_blank"
                             rel="noopener"
-                            style={{ marginTop: 8, display: 'inline-block' }}
+                            style={{ marginTop: 4, display: 'inline-flex' }}
                         >
                             {header.linkLabel} &rarr;
                         </a>

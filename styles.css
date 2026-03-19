@@ -237,9 +237,8 @@ html, body {
 .float-panel {
   position: absolute;
   right: 20px;
-  top: 50%;
-  transform: translateY(-50%);
-  max-height: calc(100% - 100px);
+  top: 16px;
+  max-height: calc(100% - 72px);
   width: 370px;
   background: var(--panel);
   backdrop-filter: blur(20px);
@@ -255,7 +254,7 @@ html, body {
   transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
 }
 .float-panel.collapsed {
-  transform: translateY(-50%) translateX(calc(100% + 40px));
+  transform: translateX(calc(100% + 40px));
   pointer-events: none;
 }
 .float-panel.collapsed .panel-tabs,
@@ -368,9 +367,9 @@ html, body {
 }
 .btn-next {
   padding: 11px 28px;
-  background: #fff;
-  color: var(--brand-dark);
-  border: 1px solid var(--border);
+  background: var(--cta);
+  color: #fff;
+  border: 1px solid var(--cta);
   border-radius: 10px;
   font-weight: 700;
   font-size: 14px;
@@ -380,12 +379,11 @@ html, body {
   display: flex;
   align-items: center;
   gap: 6px;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  box-shadow: 0 2px 8px var(--cta-glow);
 }
 .btn-next:hover {
-  background: var(--cta);
-  color: #fff;
-  border-color: var(--cta);
+  background: var(--cta-hover);
+  border-color: var(--cta-hover);
   transform: translateY(-1px);
   box-shadow: 0 4px 16px var(--cta-glow);
 }
@@ -850,23 +848,21 @@ html, body {
 .btn-product {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  padding: 12px 24px;
-  background: var(--cta);
-  color: #fff;
+  gap: 4px;
+  padding: 0;
+  background: none;
+  color: var(--brand);
   border: none;
-  border-radius: 10px;
-  font-weight: 700;
-  font-size: 14px;
+  font-weight: 600;
+  font-size: 13px;
   cursor: pointer;
   text-decoration: none;
-  transition: all 0.25s;
+  transition: all 0.2s;
   font-family: inherit;
 }
 .btn-product:hover {
-  background: var(--cta-hover);
-  transform: translateY(-1px);
-  box-shadow: 0 4px 16px var(--cta-glow);
+  color: var(--brand-dark);
+  gap: 8px;
 }
 .flyout-body {
   flex: 1;
