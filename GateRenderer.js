@@ -511,13 +511,17 @@ GateRenderer.prototype.buildGate = function(config) {
         mesh.visible = isProSpacing;
         gate.add(mesh);
     });
+    // Capture puppy clip constant for async callback (prevents race condition
+    // if buildGate is called again before model loads)
+    var puppyClipConstant = clips.pbRes.constant;
+    var pbResVisible = !!(isProSpacing || hasPuppy);
     loader.load(getModelPath('pbRes', config), function(geo) {
+        // Re-apply captured clip constant in case another buildGate reset it
+        clips.pbRes.constant = puppyClipConstant;
         var mesh = new THREE.Mesh(geo, makeClipMat(clips.pbRes));
         snap(mesh, M_IDENTITY);
         // Ultra: grpbx visible for Pro spacing OR puppy pickets
-        // When puppy is active, these bottom extra pickets fill the gap
-        // between the bottom rail and the puppy rail (clipped by pbRes plane)
-        mesh.visible = isProSpacing || hasPuppy;
+        mesh.visible = pbResVisible;
         gate.add(mesh);
     });
 
