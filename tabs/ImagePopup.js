@@ -1,4 +1,5 @@
 import React from 'react';
+import ReactDOM from 'react-dom';
 
 var ImagePopup = function(props) {
     var src = props.src;
@@ -7,11 +8,12 @@ var ImagePopup = function(props) {
 
     if (!src || !position) return null;
 
-    return (
+    return ReactDOM.createPortal(
         <div className="img-popup" style={{ top: position.top, left: position.left }}>
             <img src={src} alt={label} />
             {label && <div className="img-popup-label">{label}</div>}
-        </div>
+        </div>,
+        document.body
     );
 };
 
