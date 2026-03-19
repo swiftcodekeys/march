@@ -517,7 +517,7 @@ GateRenderer.prototype.buildGate = function(config) {
         // Ultra: grpbx visible for Pro spacing OR puppy pickets
         // When puppy is active, these bottom extra pickets fill the gap
         // between the bottom rail and the puppy rail (clipped by pbRes plane)
-        mesh.visible = isProSpacing || hasPuppy;
+        mesh.visible = !!(isProSpacing || hasPuppy);
         gate.add(mesh);
     });
 

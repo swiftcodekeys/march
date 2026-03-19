@@ -166,7 +166,7 @@ export var POST_CLIP_72 = 3.0;
 // Puppy Classic Plugged: same + adds 28 finial meshes + even tighter clip
 export var M_RAIL_PUPPY = [1,0,0,0, 0,1,0,0, 0,0,1,0, 0,0.4598,0,1];
 export var CLIP_PB_PUPPY_STD = 0.6598;   // Puppy Standard res picket bottom clip
-export var CLIP_PB_PUPPY_CLP = 0.477;    // Puppy Classic Plugged res picket bottom clip
+export var CLIP_PB_PUPPY_CLP = 0.735;    // Puppy Classic: effective clip Y≈1.0
 
 // ---- PER-PICKET ACCENT POSITIONS (from Ultra's exact position arrays) ----
 // Ultra stores accent positions as 'x,y,z*x,y,z*...' strings keyed by
