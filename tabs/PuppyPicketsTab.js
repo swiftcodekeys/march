@@ -3,16 +3,16 @@ import { STYLE_FEATURE_GATE } from '../configData';
 import ImagePopup from './ImagePopup';
 
 var PUPPY_VARIANTS = [
-    { id: 'std', name: 'Classic',   thumb: 'assets/ifence_previews/gate_puppy_pickets/classic_puppies_100.png' },
     { id: 'fls', name: 'Flush',     thumb: 'assets/ifence_previews/gate_puppy_pickets/flush_puppies_97.png' },
-    { id: 'plg', name: 'Nouveau',   thumb: 'assets/ifence_previews/gate_puppy_pickets/nouveau_puppies_94.png' },
-    { id: 'pls', name: 'Nouveau Staggered', thumb: 'assets/ifence_previews/gate_puppy_pickets/nouveau_puppies_staggered_91.png' },
-    { id: 'qua', name: 'Excelsior', thumb: 'assets/ifence_previews/gate_puppy_pickets/excelsior_puppies_88.png' },
-    { id: 'qus', name: 'Excelsior Staggered', thumb: 'assets/ifence_previews/gate_puppy_pickets/excelsior_puppies_staggered_85.png' },
-    { id: 'spe', name: 'Bella',     thumb: 'assets/ifence_previews/gate_puppy_pickets/bella_puppies_82.png' },
-    { id: 'sps', name: 'Bella Staggered', thumb: 'assets/ifence_previews/gate_puppy_pickets/bella_puppies_staggered_79.png' },
-    { id: 'tri', name: 'Fleur de Lis', thumb: 'assets/ifence_previews/gate_puppy_pickets/fleur_de_lis_puppies_76.png' },
-    { id: 'trs', name: 'Fleur de Lis Staggered', thumb: 'assets/ifence_previews/gate_puppy_pickets/fleur_de_lis_puppies_staggered_73.png' },
+    { id: 'std', name: 'Standard',  thumb: 'assets/ifence_previews/gate_puppy_pickets/classic_puppies_100.png' },
+    { id: 'plg', name: 'Classic Plugged',   thumb: 'assets/ifence_previews/gate_puppy_pickets/nouveau_puppies_94.png' },
+    { id: 'pls', name: 'Staggered Plugged', thumb: 'assets/ifence_previews/gate_puppy_pickets/nouveau_puppies_staggered_91.png' },
+    { id: 'spe', name: 'Classic Spear',     thumb: 'assets/ifence_previews/gate_puppy_pickets/bella_puppies_82.png' },
+    { id: 'sps', name: 'Staggered Spear',   thumb: 'assets/ifence_previews/gate_puppy_pickets/bella_puppies_staggered_79.png' },
+    { id: 'tri', name: 'Classic Tri-Finial', thumb: 'assets/ifence_previews/gate_puppy_pickets/fleur_de_lis_puppies_76.png' },
+    { id: 'trs', name: 'Staggered Tri-Finial', thumb: 'assets/ifence_previews/gate_puppy_pickets/fleur_de_lis_puppies_staggered_73.png' },
+    { id: 'qua', name: 'Classic Quad-Finial', thumb: 'assets/ifence_previews/gate_puppy_pickets/excelsior_puppies_88.png' },
+    { id: 'qus', name: 'Staggered Quad-Finial', thumb: 'assets/ifence_previews/gate_puppy_pickets/excelsior_puppies_staggered_85.png' },
 ];
 
 var PuppyPicketsTab = function(props) {

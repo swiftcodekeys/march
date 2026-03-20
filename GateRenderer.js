@@ -20,6 +20,7 @@ import {
     ACCENT_CIRCLE_BOTTOM_Y, ACCENT_BUTTERFLY_BOTTOM_Y,
     ACCENT_POSITIONS, ACCENT_BASE_Y, ACCENT_CIRCLE_RAIL_BUMP,
     FINIAL_POSITIONS, FINIAL_BASE_Y,
+    PUPPY_FINIAL_POSITIONS, PUPPY_FINIAL_OFFSET_Y,
     PTRES_Y_UAF201,
     HAVEN_RAIL_T1,
     RES_BOTTOM_RAIL_Y,
@@ -520,6 +521,29 @@ GateRenderer.prototype.buildGate = function(config) {
         mesh.visible = !!(isProSpacing || hasPuppy);
         gate.add(mesh);
     });
+
+    // PUPPY FINIALS — classic puppy variants get decorative finials on the extra pickets
+    // Ultra: dpfin() loads finial model per puppy type, places at pf1/pf2 (or pf1s/pf2s
+    // for staggered) positions, with Y = r3y + 0.076
+    // Model mapping: plg/pls→fp, spe/sps→fs, tri/trs→ft, qua/qus→fq
+    if (isClassicPuppy && pupId) {
+        var isStaggeredPuppy = ['pls','sps','trs','qus'].indexOf(pupId) !== -1;
+        var pfKey = isStaggeredPuppy ? (leaf + 's') : leaf;
+        var pfPositions = PUPPY_FINIAL_POSITIONS[pfKey];
+        var pfBaseY = puppyRailY + PUPPY_FINIAL_OFFSET_Y;
+        var pfModelMap = {plg:'fp',pls:'fp',spe:'fs',sps:'fs',tri:'ft',trs:'ft',qua:'fq',qus:'fq'};
+        var pfModel = pfModelMap[pupId] || 'fp';
+
+        if (pfPositions) {
+            loader.load('gate_tool/m/3/' + pfModel + '.json', function(geo) {
+                pfPositions.forEach(function(pos) {
+                    var mesh = new THREE.Mesh(geo, makeMat());
+                    mesh.position.set(pos[0], pfBaseY + pos[1], pos[2]);
+                    gate.add(mesh);
+                });
+            });
+        }
+    }
 
     // UPPER FILLER RAIL
     if (config.accessories && config.accessories.ufr) {
